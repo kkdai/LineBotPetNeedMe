@@ -1,10 +1,25 @@
-LineBot: A simple Golang LineBot for Line Bot API
+台北流浪動物領養 Line Bot:
 ==============
 
- [![GoDoc](https://godoc.org/github.com/kkdai/plurk-makerserver?status.svg)](https://godoc.org/github.com/kkdai/LineBot)  [![Build Status](https://travis-ci.org/kkdai/LineBot.svg?branch=master)](https://travis-ci.org/kkdai/LineBot)
+ [![GoDoc](https://godoc.org/github.com/kkdai/LineBotTaipeiPets?status.svg)](https://godoc.org/github.com/kkdai/LineBotTaipeiPets)  [![Build Status](https://travis-ci.org/kkdai/LineBotTaipeiPets.svg?branch=master)](https://travis-ci.org/kkdai/LineBotTaipeiPets)
 
 
+![](http://petneed.me/static//img/petNeedme_full_color.png)
 
+透過 Line 來查看台北市目前有哪些流浪動物需要領養？ 請用你的  QR Code 掃描並且加入為好友．
+
+![](https://qr-official.line.me/sid/L/vko6788l.png)
+
+
+資料來源:
+=============
+
+[「臺北市開放認養動物」API存取](http://data.taipei/opendata/datalist/datasetMeta/outboundDesc?id=6a3e862a-e1cb-4e44-b989-d35609559463&rid=f4a75ba9-7721-4363-884d-c3820b0b917c)
+
+意見與建議
+=============
+
+歡迎到 [issue](https://github.com/kkdai/LineBotTaipeiPets/issues) 寫下你的意見，或是一起來幫助我．
 
 
 Inspired By
@@ -12,6 +27,7 @@ Inspired By
 
 - [Golang (heroku) で LINE Bot 作ってみる](http://qiita.com/dongri/items/ba150f04a98e96b160e7)
 - [LINE BOT をとりあえずタダで Heroku で動かす](http://qiita.com/yuya_takeyama/items/0660a59d13e2cd0b2516)
+- [petneedyou.me](https://github.com/jsleetw/petneed.me)
 
 Project52
 ---------------
