@@ -36,12 +36,21 @@ Inspired By
 
 - [Golang (heroku) で LINE Bot 作ってみる](http://qiita.com/dongri/items/ba150f04a98e96b160e7)
 - [LINE BOT をとりあえずタダで Heroku で動かす](http://qiita.com/yuya_takeyama/items/0660a59d13e2cd0b2516)
-- [petneedyou.me](https://github.com/jsleetw/petneed.me)
+- [petneed.me](https://github.com/jsleetw/petneed.me)
 
 Project52
 ---------------
 
 It is one of my [project 52](https://github.com/kkdai/project52).
+
+
+致謝
+---------------
+
+感謝[g0v](http://g0v.tw/)的許多人不斷地提起這個專案，讓我可以注意到並且能夠一起幫忙．
+
+- [Hackpad: Petneedme](https://g0v.hackpad.com/ep/pad/static/GOdHRgQpZSL)
+- [Hackpad: 公立動物收容所資訊統整系統](https://g0v.hackpad.com/ep/pad/static/JBhVDOPxhxe)
 
 
 License
