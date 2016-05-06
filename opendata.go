@@ -17,6 +17,7 @@ const (
 	OpenDataURL string = "http://data.taipei/opendata/datalist/apiAccess?scope=resourceAquire&rid=f4a75ba9-7721-4363-884d-c3820b0b917c"
 )
 
+
 //TaipeiPets :Get from  http://data.taipei/opendata/datalist/apiAccess?scope=resourceAquire&rid=f4a75ba9-7721-4363-884d-c3820b0b917c
 type TaipeiPets struct {
 	Result struct {
@@ -28,25 +29,3 @@ type TaipeiPets struct {
 	} `json:"result"`
 }
 
-type Pet struct {
-	ID              string `json:"_id"`
-	Name            string `json:"Name"`
-	Sex             string `json:"Sex"`
-	Type            string `json:"Type"`
-	Build           string `json:"Build"`
-	Age             string `json:"Age"`
-	Variety         string `json:"Variety"`
-	Reason          string `json:"Reason"`
-	AcceptNum       string `json:"AcceptNum"`
-	ChipNum         string `json:"ChipNum"`
-	IsSterilization string `json:"IsSterilization"`
-	HairType        string `json:"HairType"`
-	Note            string `json:"Note"`
-	Resettlement    string `json:"Resettlement"`
-	Phone           string `json:"Phone"`
-	Email           string `json:"Email"`
-	ChildreAnlong   string `json:"ChildreAnlong"`
-	AnimalAnlong    string `json:"AnimalAnlong"`
-	Bodyweight      string `json:"Bodyweight"`
-	ImageName       string `json:"ImageName"`
-}

@@ -18,14 +18,8 @@ import (
 	"testing"
 )
 
-func TestPets(t *testing.T) {
-	pets := NewPets()
-	if count := pets.GetPetsCount(); count == 0 {
-		t.Error("Cannot get any pets from Taipei Open Data, count:", count)
-	}
-}
-
-func TestTaipeiPets(t *testing.T) {
+//TestTaipeiPetsData :Test if Taipei Pet data still exist
+func TestTaipeiPetsData(t *testing.T) {
 	c := NewClient(OpenDataURL)
 	body, err := c.GetHttpRes()
 	if err != nil {
@@ -41,5 +35,5 @@ func TestTaipeiPets(t *testing.T) {
 		//error
 		log.Fatal(err)
 	}
-	log.Println(" Data:", result.Result.Results[0])
+	log.Println("First Data:", result.Result.Results[0])
 }

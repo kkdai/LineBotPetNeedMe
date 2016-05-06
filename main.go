@@ -24,7 +24,6 @@ import (
 
 var bot *linebot.Client
 var PetDB *Pets
-var PetIndex int
 
 func main() {
 	strID := os.Getenv("ChannelID")
@@ -55,12 +54,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	for _, result := range received.Results {
 		content := result.Content()
 		if content != nil && content.IsMessage && content.ContentType == linebot.ContentTypeText {
-			PetIndex = PetIndex + 1
-			if PetIndex >= PetDB.GetPetsCount() {
-				PetIndex = 0
-			}
 
-			pet := PetDB.GetPetByIndex(PetIndex)
+			pet := PetDB.GetNextPet()
 			out := fmt.Sprintf("您好，目前的動物：名為%s, 所在地為:%s, 敘述: %s 電話為:%s", pet.Name, pet.Resettlement, pet.Note, pet.Phone)
 
 			// text, err := content.TextContent()

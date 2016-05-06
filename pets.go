@@ -1,3 +1,15 @@
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package main
 
 import (
@@ -7,7 +19,8 @@ import (
 
 //Pets :All pet related API
 type Pets struct {
-	allPets []Pet
+	allPets    []Pet
+	queryIndex int
 }
 
 //NewPets :
@@ -17,33 +30,47 @@ func NewPets() *Pets {
 	return p
 }
 
-//GetPetByIndex :
-func (p *Pets) GetPetByIndex(index int) *Pet {
+//GetNextPet :
+func (p *Pets) GetNextPet() *Pet {
 	if len(p.allPets) == 0 {
 		p.getPets()
 	}
 
-	if index > len(p.allPets) || index < 0 {
-		index = 0
-	}
-
-	return &p.allPets[index]
+	retPet := &p.allPets[p.getNextIndex()]
+	return retPet
 }
 
-//GetFirstDog :
-func (p *Pets) GetFirstDog() *Pet {
+//GetNextDog :
+func (p *Pets) GetNextDog() *Pet {
 	if len(p.allPets) == 0 {
 		p.getPets()
 	}
-	return &p.allPets[0]
+
+	var retPet *Pet
+	for {
+		retPet = &p.allPets[p.getNextIndex()]
+		if retPet.PetType() == Dog {
+			break
+		}
+	}
+
+	return retPet
 }
 
-//GetFirstCat :
-func (p *Pets) GetFirstCat() *Pet {
+//GetNextCat :
+func (p *Pets) GetNextCat() *Pet {
 	if len(p.allPets) == 0 {
 		p.getPets()
 	}
-	return nil
+
+	var retPet *Pet
+	for {
+		retPet = &p.allPets[p.getNextIndex()]
+		if retPet.PetType() == Cat {
+			break
+		}
+	}
+	return retPet
 }
 
 //GetPetsCount :
@@ -71,4 +98,14 @@ func (p *Pets) getPets() {
 	// 	p.allPets = append(p.allPets, v)
 	// }
 	p.allPets = result.Result.Results
+}
+
+func (p *Pets) getNextIndex() int {
+	if p.queryIndex >= len(p.allPets) {
+		p.queryIndex = 0
+	}
+
+	retInt := p.queryIndex
+	p.queryIndex++
+	return retInt
 }
