@@ -1,6 +1,8 @@
 流浪動物領養 Line 機器人: 透過 Line 可以查看目前流浪動物收容所的動物資料．
 ==============
 
+[![Join the chat at https://gitter.im/kkdai/LineBotPetNeedMe](https://badges.gitter.im/kkdai/LineBotPetNeedMe.svg)](https://gitter.im/kkdai/LineBotPetNeedMe?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
  [![GoDoc](https://godoc.org/github.com/kkdai/LineBotTaipeiPets?status.svg)](https://godoc.org/github.com/kkdai/LineBotTaipeiPets)  [![Build Status](https://travis-ci.org/kkdai/LineBotTaipeiPets.svg?branch=master)](https://travis-ci.org/kkdai/LineBotTaipeiPets)
 
 
