@@ -69,7 +69,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			}
 
 			out := fmt.Sprintf("您好，感謝你加入成為好友一起幫助流浪動物找到新的家．輸入任何文字後，會隨機得到一個流浪動物，你可以不斷重複輸入文字然後查看目前所有的流浪動物．")
-			_, err = bot.SendText([]string{opContent.ID}, out)
+			_, err = bot.SendText([]string{result.RawContent.From}, out)
 			if err != nil {
 				log.Println(err)
 			}
