@@ -56,12 +56,12 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 
 		//Log detail receive content
 		if content != nil {
-			log.Println("RECEIVE Msg:", content.IsMessage, " OP:", content.IsOperation, " type:", content.ContentType, " from:", content.From)
+			log.Println("RECEIVE Msg:", content.IsMessage, " OP:", content.IsOperation, " type:", content.ContentType, " from:", content.From, "to:", content.To, " ID:", content.ID)
 		}
 		//Add with new friend.
 		if content != nil && content.IsOperation {
 			out := fmt.Sprintf("您好，感謝你加入成為好友一起幫助流浪動物找到新的家．輸入任何文字後，會隨機得到一個流浪動物，你可以不斷重複輸入文字然後查看目前所有的流浪動物．")
-			_, err = bot.SendText([]string{content.From}, out)
+			_, err = bot.SendText([]string{content.ID}, out)
 			if err != nil {
 				log.Println(err)
 			}
