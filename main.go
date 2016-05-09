@@ -61,11 +61,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				log.Println(err)
 			}
-
-			_, err = bot.SendText([]string{content.From}, out)
-			if err != nil {
-				log.Println(err)
-			}
+			log.Println("New friend add, send cue to new friend.")
 		}
 
 		if content != nil && content.IsMessage && content.ContentType == linebot.ContentTypeText {
