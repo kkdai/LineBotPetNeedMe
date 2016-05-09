@@ -3,7 +3,7 @@
 
 [![Join the chat at https://gitter.im/kkdai/LineBotPetNeedMe](https://badges.gitter.im/kkdai/LineBotPetNeedMe.svg)](https://gitter.im/kkdai/LineBotPetNeedMe?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
- [![GoDoc](https://godoc.org/github.com/kkdai/LineBotTaipeiPets?status.svg)](https://godoc.org/github.com/kkdai/LineBotTaipeiPets)  [![Build Status](https://travis-ci.org/kkdai/LineBotTaipeiPets.svg?branch=master)](https://travis-ci.org/kkdai/LineBotTaipeiPets)
+ [![GoDoc](https://godoc.org/github.com/kkdai/LineBotPetNeedMe?status.svg)](https://godoc.org/github.com/kkdai/LineBotPetNeedMe)  [![Build Status](https://travis-ci.org/kkdai/LineBotPetNeedMe.svg?branch=master)](https://travis-ci.org/kkdai/LineBotPetNeedMe)
 
 
 ![](http://petneed.me/static//img/petNeedme_full_color.png)
