@@ -53,6 +53,21 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	for _, result := range received.Results {
 		content := result.Content()
+
+		//Add with new friend.
+		if content != nil && content.IsOperation && content.ContentType == linebot.ContentTypeText {
+			out := fmt.Sprintf("您好，感謝你加入成為好友一起幫助流浪動物找到新的家．輸入任何文字後，會隨機得到一個流浪動物，你可以不斷重複輸入文字然後查看目前所有的流浪動物．")
+			_, err = bot.SendText([]string{content.From}, out)
+			if err != nil {
+				log.Println(err)
+			}
+
+			_, err = bot.SendText([]string{content.From}, out)
+			if err != nil {
+				log.Println(err)
+			}
+		}
+
 		if content != nil && content.IsMessage && content.ContentType == linebot.ContentTypeText {
 
 			pet := PetDB.GetNextPet()
