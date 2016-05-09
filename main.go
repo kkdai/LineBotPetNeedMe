@@ -65,11 +65,11 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				log.Println("OP retreival error:", err)
 			} else {
 				log.Println("OP detail from:", opContent.From, " ID:", opContent.ID, " TO:", opContent.To)
-				log.Println("OP rawdata:", result.RawContent)
+				log.Println("OP rawdata:", result.RawContent, " from:", result.RawContent.From, " to:", result.RawContent.To, " id:", result.RawContent.ID)
 			}
 
 			out := fmt.Sprintf("您好，感謝你加入成為好友一起幫助流浪動物找到新的家．輸入任何文字後，會隨機得到一個流浪動物，你可以不斷重複輸入文字然後查看目前所有的流浪動物．")
-			_, err = bot.SendText([]string{result.RawContent.From}, out)
+			_, err = bot.SendText(result.RawContent.To, out)
 			if err != nil {
 				log.Println(err)
 			}
