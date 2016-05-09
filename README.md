@@ -52,7 +52,7 @@ It is one of my [project 52](https://github.com/kkdai/project52).
 感謝[g0v](http://g0v.tw/)的許多人不斷地提起這個專案，讓我可以注意到並且能夠一起幫忙．
 
 - [Hackpad: Petneedme](https://g0v.hackpad.com/ep/pad/static/GOdHRgQpZSL)
-- [Hackpad: 公立動物收容所資訊統整系統](https://g0v.hackpad.com/ep/pad/static/JBhVDOPxhxe)
+- [Hackpad: 公立動物收容所資訊統整系統](https://g0v.hackpad.com/ep/pad/static/JBhVDOPxhxe) ([active one](https://g0v.hackpad.com/JBhVDOPxhxe))
 
 
 License
