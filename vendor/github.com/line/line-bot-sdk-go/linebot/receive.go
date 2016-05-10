@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -272,6 +273,7 @@ func (client *Client) ParseRequest(r *http.Request) (results *ReceivedResults, e
 		return nil, ErrInvalidSignature
 	}
 
+	log.Println("RECV BODY:", string(body))
 	results = &ReceivedResults{}
 	if err = json.Unmarshal(body, results); err != nil {
 		return nil, err
