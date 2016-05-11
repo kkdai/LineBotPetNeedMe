@@ -33,6 +33,13 @@
 歡迎到 [issue](https://github.com/kkdai/LineBotTaipeiPets/issues) 寫下你的意見，或是一起來幫助我．
 
 
+
+想要自己架設一個 Line 機器人?
+=============
+
+參考我的[教學文章([Golang][教學] 在 Heroku 建立你自己的 Line 機器人 (Line Bot API))](http://www.evanlin.com/create-your-line-bot-golang/)，或是[教學 Github ](https://github.com/kkdai/LineBotTemplate)
+
+
 Inspired By
 =============
 
