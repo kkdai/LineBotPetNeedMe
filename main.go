@@ -57,6 +57,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	for _, result := range received.Results {
 		content := result.Content()
 
+		log.Println("-->", content)
+
 		//Log detail receive content
 		if content != nil {
 			log.Println("RECEIVE Msg:", content.IsMessage, " OP:", content.IsOperation, " type:", content.ContentType, " from:", content.From, "to:", content.To, " ID:", content.ID)
@@ -80,12 +82,16 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			}
 			var pet *Pet
 
-			inText := strings.ToLower(text.Text)
-			if strings.Contains(inText, "狗") || strings.Contains(inText, "dog") {
-				pet = PetDB.GetNextDog()
-			} else if strings.Contains(inText, "貓") || strings.Contains(inText, "cat") {
-				pet = PetDB.GetNextCat()
-			} else {
+			if content.ContentType == linebot.ContentTypeText {
+				inText := strings.ToLower(text.Text)
+				if strings.Contains(inText, "狗") || strings.Contains(inText, "dog") {
+					pet = PetDB.GetNextDog()
+				} else if strings.Contains(inText, "貓") || strings.Contains(inText, "cat") {
+					pet = PetDB.GetNextCat()
+				}
+			}
+
+			if pet == nil {
 				pet = PetDB.GetNextPet()
 			}
 
