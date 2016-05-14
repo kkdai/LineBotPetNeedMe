@@ -18,11 +18,14 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/line/line-bot-sdk-go/linebot"
 )
 
 var bot *linebot.Client
+
+//PetDB :
 var PetDB *Pets
 
 func main() {
@@ -71,7 +74,21 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 
 		if content != nil && content.IsMessage && content.ContentType == linebot.ContentTypeText {
 
-			pet := PetDB.GetNextPet()
+			text, err := content.TextContent()
+			if err != nil {
+				log.Println(err)
+			}
+			var pet *Pet
+
+			inText := strings.ToLower(text.Text)
+			if strings.Contains(inText, "狗") || strings.Contains(inText, "dog") {
+				pet = PetDB.GetNextDog()
+			} else if strings.Contains(inText, "貓") || strings.Contains(inText, "cat") {
+				pet = PetDB.GetNextCat()
+			} else {
+				pet = PetDB.GetNextPet()
+			}
+
 			out := fmt.Sprintf("您好，目前的動物：名為%s, 所在地為:%s, 敘述: %s 電話為:%s", pet.Name, pet.Resettlement, pet.Note, pet.Phone)
 
 			// text, err := content.TextContent()
