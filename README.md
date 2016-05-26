@@ -10,7 +10,7 @@
 
 透過 Line 來查看台北市目前有哪些流浪動物需要領養？ 請用你的  QR Code 掃描並且加入為好友．
 
-![](https://qr-official.line.me/sid/L/vko6788l.png)
+![](images/QR.png)
 
 
 主要功能:
