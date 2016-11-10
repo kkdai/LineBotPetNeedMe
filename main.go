@@ -81,30 +81,5 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 		}
-
-		// 	if content.ContentType == linebot.ContentTypeText {
-		// 			pet = PetDB.GetNextDog()
-		// 		} else if strings.Contains(inText, "貓") || strings.Contains(inText, "cat") {
-		// 			pet = PetDB.GetNextCat()
-		// 		}
-		// 	}
-
-		// 	if pet == nil {
-		// 		pet = PetDB.GetNextPet()
-		// 	}
-
-		// 	out := fmt.Sprintf("您好，目前的動物：名為%s, 所在地為:%s, 敘述: %s 電話為:%s", pet.Name, pet.Resettlement, pet.Note, pet.Phone)
-
-		// 	// text, err := content.TextContent()
-		// 	_, err = bot.SendText([]string{content.From}, out)
-		// 	if err != nil {
-		// 		log.Println(err)
-		// 	}
-
-		// 	_, err = bot.SendImage([]string{content.From}, pet.ImageName, pet.ImageName)
-		// 	if err != nil {
-		// 		log.Println(err)
-		// 	}
-		// }
 	}
 }
