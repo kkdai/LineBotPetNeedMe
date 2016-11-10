@@ -1,7 +1,7 @@
 {
-  "name": "LineBot",
-  "description": "Line Bot API tester",
-  "repository": "https://github.com/kkdai/LineBot",
+  "name": "LineBotTaipeiPets",
+  "description": "Line Bot for Taipei Pets",
+  "repository": "https://github.com/kkdai/LineBotTaipeiPets",
   "keywords": ["Line", "go", "static"],
   "buildpacks": [
     {
