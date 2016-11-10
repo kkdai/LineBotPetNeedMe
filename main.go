@@ -65,29 +65,22 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					pet = PetDB.GetNextCat()
 				}
 
-			if pet == nil {
-		 		pet = PetDB.GetNextPet()
-		 	}
+				if pet == nil {
+					pet = PetDB.GetNextPet()
+				}
 
-		out := fmt.Sprintf("您好，目前的動物：名為%s, 所在地為:%s, 敘述: %s 電話為:%s", pet.Name, pet.Resettlement, pet.Note, pet.Phone)
+				out := fmt.Sprintf("您好，目前的動物：名為%s, 所在地為:%s, 敘述: %s 電話為:%s", pet.Name, pet.Resettlement, pet.Note, pet.Phone)
 				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(out)).Do(); err != nil {
+					log.Print(err)
+				}
+
+				if _,err = bot.ReplyMessage(event.ReplyToken, linebot.NewImageMessage(pet.ImageName, pet.ImageName)).Do(); err != nil {
 					log.Print(err)
 				}
 			}
 		}
 
-		// if result.Type == linebot.EventTypeMessage {
-		// 	replyToken := result.ReplyToken
-
-		// 	text, err := result.Message ()
-		// 	if err != nil {
-		// 		log.Println(err)
-		// 	}
-		// 	var pet *Pet
-
 		// 	if content.ContentType == linebot.ContentTypeText {
-		// 		inText := strings.ToLower(text.Text)
-		// 		if strings.Contains(inText, "狗") || strings.Contains(inText, "dog") {
 		// 			pet = PetDB.GetNextDog()
 		// 		} else if strings.Contains(inText, "貓") || strings.Contains(inText, "cat") {
 		// 			pet = PetDB.GetNextCat()
