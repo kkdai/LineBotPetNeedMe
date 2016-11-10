@@ -17,7 +17,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 	"strings"
 
 	"github.com/line/line-bot-sdk-go/linebot"
@@ -29,14 +28,13 @@ var bot *linebot.Client
 var PetDB *Pets
 
 func main() {
-	strID := os.Getenv("ChannelID")
-	numID, err := strconv.ParseInt(strID, 10, 64)
+	var err error
 	if err != nil {
 		log.Fatal("Wrong environment setting about ChannelID")
 	}
 
 	PetDB = NewPets()
-	bot, err = linebot.NewClient(numID, os.Getenv("ChannelSecret"), os.Getenv("MID"))
+	bot, err = linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
 	log.Println("Bot:", bot, " err:", err)
 	http.HandleFunc("/callback", callbackHandler)
 	port := os.Getenv("PORT")
@@ -45,7 +43,7 @@ func main() {
 }
 
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
-	received, err := bot.ParseRequest(r)
+	events, err := bot.ParseRequest(r)
 	if err != nil {
 		if err == linebot.ErrInvalidSignature {
 			w.WriteHeader(400)
@@ -54,60 +52,64 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	for _, result := range received.Results {
-		content := result.Content()
-
-		log.Println("-->", content)
-
-		//Log detail receive content
-		if content != nil {
-			log.Println("RECEIVE Msg:", content.IsMessage, " OP:", content.IsOperation, " type:", content.ContentType, " from:", content.From, "to:", content.To, " ID:", content.ID)
-		}
-		//Add with new friend.
-		if content != nil && content.IsOperation && content.OpType == linebot.OpTypeAddedAsFriend {
-			out := fmt.Sprintf("您好，感謝你加入成為好友一起幫助流浪動物找到新的家．輸入任何文字後，會隨機得到一個流浪動物，你可以不斷重複輸入文字然後查看目前所有的流浪動物．")
-			//result.RawContent.Params[0] is who send your bot friend added operation, otherwise you cannot get in content or operation content.
-			_, err = bot.SendText([]string{result.RawContent.Params[0]}, out)
-			if err != nil {
-				log.Println(err)
-			}
-			log.Println("New friend add, send cue to new friend.")
-		}
-
-		if content != nil && content.IsMessage {
-
-			text, err := content.TextContent()
-			if err != nil {
-				log.Println(err)
-			}
-			var pet *Pet
-
-			if content.ContentType == linebot.ContentTypeText {
-				inText := strings.ToLower(text.Text)
+	for _, event := range events {
+		if event.Type == linebot.EventTypeMessage {
+			switch message := event.Message.(type) {
+			case *linebot.TextMessage:
+				var pet *Pet
+				log.Println(message.Text)
+				inText := strings.ToLower(message.Text)
 				if strings.Contains(inText, "狗") || strings.Contains(inText, "dog") {
 					pet = PetDB.GetNextDog()
 				} else if strings.Contains(inText, "貓") || strings.Contains(inText, "cat") {
 					pet = PetDB.GetNextCat()
 				}
-			}
 
 			if pet == nil {
-				pet = PetDB.GetNextPet()
+		 		pet = PetDB.GetNextPet()
+		 	}
+
+		out := fmt.Sprintf("您好，目前的動物：名為%s, 所在地為:%s, 敘述: %s 電話為:%s", pet.Name, pet.Resettlement, pet.Note, pet.Phone)
+				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(out)).Do(); err != nil {
+					log.Print(err)
+				}
 			}
-
-			out := fmt.Sprintf("您好，目前的動物：名為%s, 所在地為:%s, 敘述: %s 電話為:%s", pet.Name, pet.Resettlement, pet.Note, pet.Phone)
-
-			// text, err := content.TextContent()
-			_, err = bot.SendText([]string{content.From}, out)
-			if err != nil {
-				log.Println(err)
-			}
-
-			_, err = bot.SendImage([]string{content.From}, pet.ImageName, pet.ImageName)
-			if err != nil {
-				log.Println(err)
-			}
-
 		}
+
+		// if result.Type == linebot.EventTypeMessage {
+		// 	replyToken := result.ReplyToken
+
+		// 	text, err := result.Message ()
+		// 	if err != nil {
+		// 		log.Println(err)
+		// 	}
+		// 	var pet *Pet
+
+		// 	if content.ContentType == linebot.ContentTypeText {
+		// 		inText := strings.ToLower(text.Text)
+		// 		if strings.Contains(inText, "狗") || strings.Contains(inText, "dog") {
+		// 			pet = PetDB.GetNextDog()
+		// 		} else if strings.Contains(inText, "貓") || strings.Contains(inText, "cat") {
+		// 			pet = PetDB.GetNextCat()
+		// 		}
+		// 	}
+
+		// 	if pet == nil {
+		// 		pet = PetDB.GetNextPet()
+		// 	}
+
+		// 	out := fmt.Sprintf("您好，目前的動物：名為%s, 所在地為:%s, 敘述: %s 電話為:%s", pet.Name, pet.Resettlement, pet.Note, pet.Phone)
+
+		// 	// text, err := content.TextContent()
+		// 	_, err = bot.SendText([]string{content.From}, out)
+		// 	if err != nil {
+		// 		log.Println(err)
+		// 	}
+
+		// 	_, err = bot.SendImage([]string{content.From}, pet.ImageName, pet.ImageName)
+		// 	if err != nil {
+		// 		log.Println(err)
+		// 	}
+		// }
 	}
 }
