@@ -18,7 +18,7 @@
 
 目前僅僅支援顯示台北市流浪動物資料，並且顯示該動物圖片．
 
-![](images/LineDialog.png)
+![](https://qr-official.line.me/sid/L/uia7368c.png)
 
 歡迎各位建議任何新的功能．
 
