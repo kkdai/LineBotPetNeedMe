@@ -24,7 +24,7 @@ import (
 	"github.com/line/line-bot-sdk-go/linebot"
 )
 
-var ImgSrv string = "https://img-cache-server.herokuapp.com/url?"
+var ImgSrv string = "https://img-cache-server.herokuapp.com/"
 var bot *linebot.Client
 
 //PetDB :
