@@ -14,14 +14,17 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 
 	"github.com/line/line-bot-sdk-go/linebot"
 )
 
+var ImgSrv string = "https://img-cache-server.herokuapp.com/url?"
 var bot *linebot.Client
 
 //PetDB :
@@ -36,6 +39,29 @@ func main() {
 	port := os.Getenv("PORT")
 	addr := fmt.Sprintf(":%s", port)
 	http.ListenAndServe(addr, nil)
+}
+
+func getSecureImageAddress(oriAdd string) string {
+	eURL := url.QueryEscape(oriAdd)
+	imgGetUrl := fmt.Sprintf("%surl?%s", ImgSrv, eURL)
+	log.Println("eURL:", eURL, " url:", imgGetUrl, " ImgApi:", ImgSrv)
+
+	response, err := http.Get(imgGetUrl)
+	defer response.Body.Close()
+
+	if err != nil {
+		log.Println("Error while downloading:", err)
+		return ""
+	}
+
+	totalBody, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		log.Println("Error while parsing:", err)
+		return ""
+	}
+	log.Println("Got data:", string(totalBody))
+	return fmt.Sprintf("%simgs?%s.jpg", ImgSrv, string(totalBody))
+
 }
 
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
@@ -65,14 +91,10 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					pet = PetDB.GetNextPet()
 				}
 
-				out := fmt.Sprintf("您好，目前的動物：名為%s, 所在地為:%s, 敘述: %s 電話為:%s 圖片網址在: %s", pet.Name, pet.Resettlement, pet.Note, pet.Phone, pet.ImageName)
-				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(out)).Do(); err != nil {
-					log.Print(err)
-				}
-
-				log.Println("Img:", pet.ImageName)
-
-				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewImageMessage(pet.ImageName, pet.ImageName)).Do(); err != nil {
+				imgUrl := getSecureImageAddress(pet.ImageName)
+				log.Println("img:", imgUrl)
+				out := fmt.Sprintf("您好，目前的動物：名為%s, 所在地為:%s, 敘述: %s 電話為:%s ", pet.Name, pet.Resettlement, pet.Note, pet.Phone)
+				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(out), linebot.NewImageMessage(imgUrl, imgUrl)).Do(); err != nil {
 					log.Print(err)
 				}
 			}
