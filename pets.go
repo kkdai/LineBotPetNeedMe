@@ -86,18 +86,15 @@ func (p *Pets) getPets() {
 	}
 
 	// log.Println("ret:", string(body))
-	var result TaipeiPets
-	err = json.Unmarshal(body, &result)
+	var results TaiwanPets
+	err = json.Unmarshal(body, &results)
 
 	if err != nil {
 		//error
 		log.Fatal(err)
 	}
-	log.Println("All pets is :", len(result.Result.Results))
-	// for _, v := range result.Result.Results {
-	// 	p.allPets = append(p.allPets, v)
-	// }
-	p.allPets = result.Result.Results
+	log.Println("All pets is :", len(results))
+	p.LoadPets(results)
 }
 
 func (p *Pets) getNextIndex() int {
@@ -108,4 +105,16 @@ func (p *Pets) getNextIndex() int {
 	retInt := p.queryIndex
 	p.queryIndex++
 	return retInt
+}
+
+func (p *Pets) LoadPets(pets TaiwanPets) {
+	//Mapping
+	for _, v := range pets {
+		pt := Pet{}
+		pt.Name = v.AnimalSubid
+		pt.ImageName = v.AlbumFile
+		pt.Type = v.AnimalKind
+
+		p.allPets = append(p.allPets, pt)
+	}
 }
