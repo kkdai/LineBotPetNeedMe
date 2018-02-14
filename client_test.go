@@ -28,12 +28,12 @@ func TestTaipeiPetsData(t *testing.T) {
 	}
 
 	// log.Println("ret:", string(body))
-	var result TaipeiPets
-	err = json.Unmarshal(body, &result)
+	var results TaiwanPets
+	err = json.Unmarshal(body, &results)
 
 	if err != nil {
 		//error
 		log.Fatal(err)
 	}
-	log.Println("First Data:", result.Result.Results[0])
+	log.Println("First Data:", results)
 }

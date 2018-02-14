@@ -114,6 +114,7 @@ func (p *Pets) LoadPets(pets TaiwanPets) {
 		pt.Name = v.AnimalSubid
 		pt.ImageName = v.AlbumFile
 		pt.Type = v.AnimalKind
+		pt.Resettlement = v.ShelterName + "(" + v.ShelterAddress + ")"
 
 		p.allPets = append(p.allPets, pt)
 	}
