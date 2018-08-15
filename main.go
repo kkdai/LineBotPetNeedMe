@@ -94,19 +94,19 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					pet = PetDB.GetNextPet()
 				}
 
-				imgUrl := getSecureImageAddress(pet.ImageName)
-				log.Println("img:", imgUrl)
+				// imgUrl := getSecureImageAddress(pet.ImageName)
+				// log.Println("img:", imgUrl)
 				out := fmt.Sprintf("您好，目前的動物名為%s, 所在地為:%s, 電話為:%s ", pet.Name, pet.Resettlement, pet.Phone)
-				log.Println("Current msg:", out, " img=", imgUrl)
-				if imgUrl != "" {
-					if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(out), linebot.NewImageMessage(imgUrl, imgUrl)).Do(); err != nil {
-						log.Print(err)
-					}
-				} else {
-					if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(out)).Do(); err != nil {
-						log.Print(err)
-					}
+				log.Println("Current msg:", out)
+				// if imgUrl != "" {
+				// 	if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(out), linebot.NewImageMessage(imgUrl, imgUrl)).Do(); err != nil {
+				// 		log.Print(err)
+				// 	}
+				// } else {
+				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(out)).Do(); err != nil {
+					log.Print(err)
 				}
+				// }
 			}
 		}
 	}
