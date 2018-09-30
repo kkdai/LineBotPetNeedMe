@@ -89,6 +89,15 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					pet = PetDB.GetNextDog()
 				} else if strings.Contains(inText, "貓") || strings.Contains(inText, "cat") {
 					pet = PetDB.GetNextCat()
+				} else if strings.Contains(inText, "link") {
+					var userID string
+					if event.Source != nil {
+						userID = event.Source.UserID
+					}
+
+					if err := bot.IssueLinkToken(userID).Do; err != nil {
+						fmt.Println("Issue link error:", err)
+					}
 				}
 
 				if pet == nil {
@@ -100,6 +109,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(out)).Do(); err != nil {
 					log.Print(err)
 				}
+
 			}
 		case linebot.EventTypeBeacon:
 			log.Println(" Beacon event....")
