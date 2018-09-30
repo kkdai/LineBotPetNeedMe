@@ -1,7 +1,7 @@
 {
-  "name": "LineBotTaipeiPets",
+  "name": "linebotpetneedme",
   "description": "Line Bot for Taipei Pets",
-  "repository": "https://github.com/kkdai/LineBotTaipeiPets",
+  "repository": "https://github.com/kkdai/linebotpetneedme",
   "keywords": ["Line", "go", "static"],
   "buildpacks": [
     {
