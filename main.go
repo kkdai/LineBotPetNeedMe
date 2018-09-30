@@ -98,6 +98,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					if err := bot.IssueLinkToken(userID).Do; err != nil {
 						fmt.Println("Issue link error:", err, " userID is:", userID)
 					}
+					pet = PetDB.GetNextDog()
 				}
 
 				if pet == nil {
