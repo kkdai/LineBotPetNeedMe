@@ -14,17 +14,14 @@ package main
 
 import (
 	"fmt"
-	"html"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
 	"os"
-	"strconv"
 	"strings"
 
 	"github.com/line/line-bot-sdk-go/linebot"
-	"golang.org/x/text/encoding/unicode/utf32"
 )
 
 var ImgSrv string = "https://img-cache-server.herokuapp.com/"
@@ -108,30 +105,13 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					pet = PetDB.GetNextPet()
 				}
 
-				var emojiStr string
-				// emoji := [][]int{
-				// 	// Emoticons icons.
-				// 	{128513, 128591},
-				// 	// Dingbats.
-				// 	{9986, 10160},
-				// 	// Transport and map symbols.
-				// 	{128640, 128704},
+				// utf32BEIB := utf32.UTF32(utf32.BigEndian, utf32.IgnoreBOM)
+				// dec := utf32BEIB.NewDecoder()
+				// s, err := dec.String("\x00\x10\x00\x84")
+				// if err != nil {
+				// 	log.Print(err)
 				// }
-
-				// for _, value := range emoji {
-				// 	for x := value[0]; x < value[1]; x++ {
-				// Unescape the string (HTML Entity -> String).
-				emojiStr += html.UnescapeString("&#" + strconv.Itoa(56256) + ";")
-				emojiStr += html.UnescapeString("&#" + strconv.Itoa(56452) + ";")
-				// 	}
-				// }
-				utf32BEIB := utf32.UTF32(utf32.BigEndian, utf32.IgnoreBOM)
-				dec := utf32BEIB.NewDecoder()
-				s, err := dec.String("\x00\x10\x00\x84")
-				if err != nil {
-					log.Print(err)
-				}
-				out := fmt.Sprintf("您好，目前的動物名為%s, 所在地為:%s, 電話為:%s  %s", pet.Name, pet.Resettlement, pet.Phone, s)
+				out := fmt.Sprintf("您好，目前的動物名為%s, 所在地為:%s, 電話為:%s  %s", pet.Name, pet.Resettlement, pet.Phone, "\x00\x10\x00\x84")
 				log.Println("Current msg:", out)
 				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(out)).Do(); err != nil {
 					log.Print(err)
