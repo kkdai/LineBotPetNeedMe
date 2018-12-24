@@ -13,6 +13,7 @@
 package main
 
 import (
+	"encoding/hex"
 	"fmt"
 	"html"
 	"io/ioutil"
@@ -124,8 +125,12 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				emojiStr += html.UnescapeString("&#" + strconv.Itoa(56452) + ";")
 				// 	}
 				// }
-				const st = `0x100084`
-				out := fmt.Sprintf("您好，目前的動物名為%s, 所在地為:%s, 電話為:%s  %s", pet.Name, pet.Resettlement, pet.Phone, st)
+				const s = "0x100084"
+				decoded, err := hex.DecodeString(s)
+				if err != nil {
+					log.Fatal(err)
+				}
+				out := fmt.Sprintf("您好，目前的動物名為%s, 所在地為:%s, 電話為:%s  %s", pet.Name, pet.Resettlement, pet.Phone, decoded)
 				log.Println("Current msg:", out)
 				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(out)).Do(); err != nil {
 					log.Print(err)
