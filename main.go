@@ -125,7 +125,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				// 	}
 				// }
 				const s = "0x100084"
-				out := fmt.Sprintf("您好，目前的動物名為%s, 所在地為:%s, 電話為:%s  %s", pet.Name, pet.Resettlement, pet.Phone, s)
+				out := fmt.Sprintf("您好，目前的動物名為%s, 所在地為:%s, 電話為:%s  %c", pet.Name, pet.Resettlement, pet.Phone, s)
 				log.Println("Current msg:", out)
 				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(out)).Do(); err != nil {
 					log.Print(err)
