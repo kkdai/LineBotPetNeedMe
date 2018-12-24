@@ -14,11 +14,13 @@ package main
 
 import (
 	"fmt"
+	"html"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/line/line-bot-sdk-go/linebot"
@@ -105,8 +107,23 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					pet = PetDB.GetNextPet()
 				}
 
-				const st = `\uDBC0`
-				out := fmt.Sprintf("您好，目前的動物名為%s, 所在地為:%s, 電話為:%s  %s", pet.Name, pet.Resettlement, pet.Phone, st)
+				var emojiStr string
+				emoji := [][]int{
+					// Emoticons icons.
+					{128513, 128591},
+					// Dingbats.
+					{9986, 10160},
+					// Transport and map symbols.
+					{128640, 128704},
+				}
+
+				for _, value := range emoji {
+					for x := value[0]; x < value[1]; x++ {
+						// Unescape the string (HTML Entity -> String).
+						emojiStr += html.UnescapeString("&#" + strconv.Itoa(x) + ";")
+					}
+				}
+				out := fmt.Sprintf("您好，目前的動物名為%s, 所在地為:%s, 電話為:%s  %s", pet.Name, pet.Resettlement, pet.Phone, emojiStr)
 				log.Println("Current msg:", out)
 				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(out)).Do(); err != nil {
 					log.Print(err)
