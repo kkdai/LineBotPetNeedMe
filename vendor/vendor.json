@@ -19,7 +19,13 @@
 			"path": "golang.org/x/net/context/ctxhttp",
 			"revision": "9ef22118a4b25863aa94546daffbc0a18feaafb3",
 			"revisionTime": "2016-11-09T21:27:32Z"
+		},
+		{
+			"checksumSHA1": "DxeMPxsqhtzc0B1FDFF1ICw0vDo=",
+			"path": "golang.org/x/text/encoding/unicode/utf32",
+			"revision": "6f44c5a2ea40ee3593d98cdcc905cc1fdaa660e2",
+			"revisionTime": "2018-10-29T18:00:05Z"
 		}
 	],
-	"rootPath": "github.com/kkdai/linebotpetneedme"
+	"rootPath": "github.com/kkdai/LineBotPetNeedMe"
 }
