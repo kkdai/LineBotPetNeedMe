@@ -124,7 +124,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				emojiStr += html.UnescapeString("&#" + strconv.Itoa(56452) + ";")
 				// 	}
 				// }
-				const s = "0x100084"
+				const s = `0x100084`
 				out := fmt.Sprintf("您好，目前的動物名為%s, 所在地為:%s, 電話為:%s  %c", pet.Name, pet.Resettlement, pet.Phone, s)
 				log.Println("Current msg:", out)
 				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(out)).Do(); err != nil {
