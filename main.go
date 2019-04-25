@@ -19,6 +19,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/line/line-bot-sdk-go/linebot"
@@ -111,6 +112,10 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				s, err := dec.String("\x00\x10\x00\x84")
 				if err != nil {
 					log.Print(err)
+				}
+				quota, err := bot.GetMessageQuota().Do()
+				if err != nil {
+					log.Println("Quota err:", err, " msg remain:", strconv.FormatInt(quota.Value, 10))
 				}
 				out := fmt.Sprintf("您好，目前的動物名為%s, 所在地為:%s, 電話為:%s  %s", pet.Name, pet.Resettlement, pet.Phone, s)
 				log.Println("Current msg:", out)
