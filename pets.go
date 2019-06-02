@@ -14,7 +14,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 )
 
@@ -113,7 +112,9 @@ func (p *Pets) LoadPets(pets TaiwanPets) {
 		pt := Pet{}
 		pt.Name = v.AnimalSubid
 		pt.ImageName = v.AlbumFile
-		pt.Type = fmt.Sprintf("%s (%s)", v.AnimalKind, v.AnimalColour)
+		pt.HairType = v.AnimalColour
+		pt.Type = v.AnimalBodytype
+		pt.Variety = v.AnimalKind
 		pt.Resettlement = v.ShelterName + "(" + v.ShelterAddress + ")"
 		pt.Phone = v.ShelterTel
 		pt.Sex = v.AnimalSex
