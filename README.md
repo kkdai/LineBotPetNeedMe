@@ -47,6 +47,12 @@ Inspired By
 - [LINE BOT をとりあえずタダで Heroku で動かす](http://qiita.com/yuya_takeyama/items/0660a59d13e2cd0b2516)
 - [petneed.me](https://github.com/jsleetw/petneed.me)
 
+
+Build Your Own PetNeedMe chatbot
+---------------
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
 Project52
 ---------------
 
