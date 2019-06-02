@@ -75,5 +75,5 @@ func (p *Pet) DisplayPet() string {
 		log.Print(err)
 	}
 
-	return fmt.Sprintf("%s 您好，目前的動物品種是 %s 名為%s, 所在地為:%s, 電話為:%s  敘述為:%s", brownEmoji, p.Type+"("+p.Sex+")", p.Name, p.Resettlement, p.Phone, p.Note)
+	return fmt.Sprintf("%s 您好 \n 目前的動物品種是 %s \n 名為%s, \n 所在地為:%s, 電話為:%s  敘述為:%s", brownEmoji, p.Type+"("+p.Sex+")", p.Name, p.Resettlement, p.Phone, p.Note)
 }
