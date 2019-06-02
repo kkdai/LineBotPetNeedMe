@@ -14,6 +14,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 )
 
@@ -47,13 +48,12 @@ func (p *Pets) GetNextDog() *Pet {
 	}
 
 	var retPet *Pet
-	for {
-		retPet = &p.allPets[p.getNextIndex()]
-		if retPet.PetType() == Dog {
+	for _, p := range p.allPets {
+		if p.PetType() == Dog {
+			retPet = &p
 			break
 		}
 	}
-
 	return retPet
 }
 
@@ -64,9 +64,9 @@ func (p *Pets) GetNextCat() *Pet {
 	}
 
 	var retPet *Pet
-	for {
-		retPet = &p.allPets[p.getNextIndex()]
-		if retPet.PetType() == Cat {
+	for _, p := range p.allPets {
+		if p.PetType() == Cat {
+			retPet = &p
 			break
 		}
 	}
@@ -113,9 +113,11 @@ func (p *Pets) LoadPets(pets TaiwanPets) {
 		pt := Pet{}
 		pt.Name = v.AnimalSubid
 		pt.ImageName = v.AlbumFile
-		pt.Type = v.AnimalKind
+		pt.Type = fmt.Sprintf("%s (%s)", v.AnimalKind, v.AnimalColour)
 		pt.Resettlement = v.ShelterName + "(" + v.ShelterAddress + ")"
 		pt.Phone = v.ShelterTel
+		pt.Sex = v.AnimalSex
+		pt.Note = v.AnimalRemark
 		p.allPets = append(p.allPets, pt)
 	}
 }

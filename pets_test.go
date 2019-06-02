@@ -39,10 +39,12 @@ func TestGetCat(t *testing.T) {
 	pet := pets.GetNextCat()
 	if pet == nil {
 		t.Error("Cannot get pet..")
+		return
 	}
 
 	if pet.PetType() != Cat {
 		t.Error("Get cat error")
+		return
 	}
 	log.Println("Get cat:", pet)
 }
@@ -52,10 +54,11 @@ func TestGetDog(t *testing.T) {
 	pet := pets.GetNextDog()
 	if pet == nil {
 		t.Error("Cannot get pet..")
+		return
 	}
-
 	if pet.PetType() != Dog {
 		t.Error("Get dog error")
+		return
 	}
 	log.Println("Get Dog:", pet)
 }
