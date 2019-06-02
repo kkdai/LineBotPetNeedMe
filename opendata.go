@@ -12,15 +12,15 @@
 
 package main
 
-// 「政府資料開放平臺: 動物認領養」API存取: https://data.gov.tw/dataset/9842#r0
+// 「政府資料開放平臺: 動物認領養」API存取: https://data.gov.tw/dataset/85903
 const (
-	OpenDataURL string = "http://data.coa.gov.tw/Service/OpenData/AnimalOpenData.aspx"
+	OpenDataURL string = "http://data.coa.gov.tw/Service/OpenData/TransService.aspx?UnitId=QcbUEzN6E6DL&$top=50&$skip=0"
 )
 
 type TaiwanPets []TaiwanPet
 
 type TaiwanPet struct {
-	AnimalID            string      `json:"animal_id"`
+	AnimalID            int         `json:"animal_id"`
 	AnimalSubid         string      `json:"animal_subid"`
 	AnimalAreaPkid      int         `json:"animal_area_pkid"`
 	AnimalShelterPkid   int         `json:"animal_shelter_pkid"`

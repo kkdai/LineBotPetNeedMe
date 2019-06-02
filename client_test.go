@@ -33,5 +33,5 @@ func TestTaipeiPetsData(t *testing.T) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println("First Data:", results)
+	log.Println("Client Data:", results)
 }

@@ -96,7 +96,11 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				}
 
 				out := pet.DisplayPet()
-				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(out)).Do(); err != nil {
+				if len(pet.ImageName) > 0 {
+					if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(out), linebot.NewImageMessage(pet.ImageName, pet.ImageName)).Do(); err != nil {
+						log.Print(err)
+					}
+				} else if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(out)).Do(); err != nil {
 					log.Print(err)
 				}
 			}

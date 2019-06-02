@@ -35,6 +35,14 @@ func TestGetPet(t *testing.T) {
 	log.Println(pet)
 }
 
+func TestGetMultiplePets(t *testing.T) {
+	pets := NewPets()
+	for i := 0; i < pets.GetPetsCount(); i++ {
+		pet := pets.GetNextPet()
+		log.Println(pet.DisplayPet())
+	}
+}
+
 func TestGetCat(t *testing.T) {
 	pets := NewPets()
 	pet := pets.GetNextCat()
