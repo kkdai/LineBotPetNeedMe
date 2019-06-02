@@ -19,11 +19,9 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"strconv"
 	"strings"
 
 	"github.com/line/line-bot-sdk-go/linebot"
-	"golang.org/x/text/encoding/unicode/utf32"
 )
 
 var ImgSrv string = "https://img-cache-server.herokuapp.com/"
@@ -97,28 +95,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					pet = PetDB.GetNextPet()
 				}
 
-				utf32BEIB := utf32.UTF32(utf32.BigEndian, utf32.IgnoreBOM)
-				dec := utf32BEIB.NewDecoder()
-				s, err := dec.String("\x00\x10\x00\x84")
-				if err != nil {
-					log.Print(err)
-				}
-				quota, err := bot.GetMessageQuota().Do()
-				if err != nil {
-					log.Println("Quota err:", err)
-				}
-				out := fmt.Sprintf("您好，目前的動物名為%s, 所在地為:%s, 電話為:%s  敘述為:%s  %s", pet.Name, pet.Resettlement, pet.Phone, pet.Note, s)
-				log.Println("Current msg:", out, " msg remain:", strconv.FormatInt(quota.Value, 10))
+				out := pet.DisplayPet()
 				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(out)).Do(); err != nil {
-					log.Print(err)
-				}
-
-			}
-		case linebot.EventTypeBeacon:
-			log.Println(" Beacon event....")
-			if b := event.Beacon; b != nil {
-				ret := fmt.Sprintln("Msg:", string(b.DeviceMessage), " hwid:", b.Hwid, " type:", b.Type)
-				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(ret)).Do(); err != nil {
 					log.Print(err)
 				}
 			}

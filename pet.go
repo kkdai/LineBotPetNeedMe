@@ -12,6 +12,13 @@
 
 package main
 
+import (
+	"fmt"
+	"log"
+
+	"golang.org/x/text/encoding/unicode/utf32"
+)
+
 //PetType :
 type PetType int
 
@@ -57,4 +64,16 @@ func (p *Pet) PetType() PetType {
 	}
 
 	return retType
+}
+
+//DisplayPet : Display single pet on chatbot
+func (p *Pet) DisplayPet() string {
+	utf32BEIB := utf32.UTF32(utf32.BigEndian, utf32.IgnoreBOM)
+	dec := utf32BEIB.NewDecoder()
+	brownEmoji, err := dec.String("\x00\x10\x00\x84")
+	if err != nil {
+		log.Print(err)
+	}
+
+	return fmt.Sprintf("%s 您好，目前的動物品種是 %s 名為%s, 所在地為:%s, 電話為:%s  敘述為:%s", brownEmoji, p.Type+"("+p.Sex+")", p.Name, p.Resettlement, p.Phone, p.Note)
 }

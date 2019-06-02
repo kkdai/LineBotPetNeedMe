@@ -31,6 +31,7 @@ func TestGetPet(t *testing.T) {
 		t.Error("Cannot get pet..")
 	}
 
+	log.Println(pet.DisplayPet())
 	log.Println(pet)
 }
 
