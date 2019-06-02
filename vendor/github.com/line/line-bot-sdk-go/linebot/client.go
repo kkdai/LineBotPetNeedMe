@@ -28,31 +28,33 @@ import (
 const (
 	APIEndpointBase = "https://api.line.me"
 
-	APIEndpointPushMessage           = "/v2/bot/message/push"
-	APIEndpointReplyMessage          = "/v2/bot/message/reply"
-	APIEndpointMulticast             = "/v2/bot/message/multicast"
-	APIEndpointGetMessageContent     = "/v2/bot/message/%s/content"
-	APIEndpointGetMessageQuota       = "/v2/bot/message/quota"
-	APIEndpointLeaveGroup            = "/v2/bot/group/%s/leave"
-	APIEndpointLeaveRoom             = "/v2/bot/room/%s/leave"
-	APIEndpointGetProfile            = "/v2/bot/profile/%s"
-	APIEndpointGetGroupMemberProfile = "/v2/bot/group/%s/member/%s"
-	APIEndpointGetRoomMemberProfile  = "/v2/bot/room/%s/member/%s"
-	APIEndpointGetGroupMemberIDs     = "/v2/bot/group/%s/members/ids"
-	APIEndpointGetRoomMemberIDs      = "/v2/bot/room/%s/members/ids"
-	APIEndpointCreateRichMenu        = "/v2/bot/richmenu"
-	APIEndpointGetRichMenu           = "/v2/bot/richmenu/%s"
-	APIEndpointListRichMenu          = "/v2/bot/richmenu/list"
-	APIEndpointDeleteRichMenu        = "/v2/bot/richmenu/%s"
-	APIEndpointGetUserRichMenu       = "/v2/bot/user/%s/richmenu"
-	APIEndpointLinkUserRichMenu      = "/v2/bot/user/%s/richmenu/%s"
-	APIEndpointUnlinkUserRichMenu    = "/v2/bot/user/%s/richmenu"
-	APIEndpointSetDefaultRichMenu    = "/v2/bot/user/all/richmenu/%s"
-	APIEndpointDefaultRichMenu       = "/v2/bot/user/all/richmenu"   // Get: GET / Delete: DELETE
-	APIEndpointDownloadRichMenuImage = "/v2/bot/richmenu/%s/content" // Download: GET / Upload: POST
-	APIEndpointUploadRichMenuImage   = "/v2/bot/richmenu/%s/content" // Download: GET / Upload: POST
-	APIEndpointBulkLinkRichMenu      = "/v2/bot/richmenu/bulk/link"
-	APIEndpointBulkUnlinkRichMenu    = "/v2/bot/richmenu/bulk/unlink"
+	APIEndpointPushMessage                = "/v2/bot/message/push"
+	APIEndpointReplyMessage               = "/v2/bot/message/reply"
+	APIEndpointMulticast                  = "/v2/bot/message/multicast"
+	APIEndpointGetMessageContent          = "/v2/bot/message/%s/content"
+	APIEndpointGetMessageQuota            = "/v2/bot/message/quota"
+	APIEndpointGetMessageConsumption      = "/v2/bot/message/quota/consumption"
+	APIEndpointGetMessageQuotaConsumption = "/v2/bot/message/quota/consumption"
+	APIEndpointLeaveGroup                 = "/v2/bot/group/%s/leave"
+	APIEndpointLeaveRoom                  = "/v2/bot/room/%s/leave"
+	APIEndpointGetProfile                 = "/v2/bot/profile/%s"
+	APIEndpointGetGroupMemberProfile      = "/v2/bot/group/%s/member/%s"
+	APIEndpointGetRoomMemberProfile       = "/v2/bot/room/%s/member/%s"
+	APIEndpointGetGroupMemberIDs          = "/v2/bot/group/%s/members/ids"
+	APIEndpointGetRoomMemberIDs           = "/v2/bot/room/%s/members/ids"
+	APIEndpointCreateRichMenu             = "/v2/bot/richmenu"
+	APIEndpointGetRichMenu                = "/v2/bot/richmenu/%s"
+	APIEndpointListRichMenu               = "/v2/bot/richmenu/list"
+	APIEndpointDeleteRichMenu             = "/v2/bot/richmenu/%s"
+	APIEndpointGetUserRichMenu            = "/v2/bot/user/%s/richmenu"
+	APIEndpointLinkUserRichMenu           = "/v2/bot/user/%s/richmenu/%s"
+	APIEndpointUnlinkUserRichMenu         = "/v2/bot/user/%s/richmenu"
+	APIEndpointSetDefaultRichMenu         = "/v2/bot/user/all/richmenu/%s"
+	APIEndpointDefaultRichMenu            = "/v2/bot/user/all/richmenu"   // Get: GET / Delete: DELETE
+	APIEndpointDownloadRichMenuImage      = "/v2/bot/richmenu/%s/content" // Download: GET / Upload: POST
+	APIEndpointUploadRichMenuImage        = "/v2/bot/richmenu/%s/content" // Download: GET / Upload: POST
+	APIEndpointBulkLinkRichMenu           = "/v2/bot/richmenu/bulk/link"
+	APIEndpointBulkUnlinkRichMenu         = "/v2/bot/richmenu/bulk/unlink"
 
 	APIEndpointGetAllLIFFApps = "/liff/v1/apps"
 	APIEndpointAddLIFFApp     = "/liff/v1/apps"
@@ -134,23 +136,14 @@ func (client *Client) do(ctx context.Context, req *http.Request) (*http.Response
 	req.Header.Set("Authorization", "Bearer "+client.channelToken)
 	req.Header.Set("User-Agent", "LINE-BotSDK-Go/"+version)
 	if ctx != nil {
-		res, err := client.httpClient.Do(req.WithContext(ctx))
-		if err != nil {
-			select {
-			case <-ctx.Done():
-				err = ctx.Err()
-			default:
-			}
-		}
-
-		return res, err
+		req = req.WithContext(ctx)
 	}
 	return client.httpClient.Do(req)
 
 }
 
 func (client *Client) get(ctx context.Context, endpoint string, query url.Values) (*http.Response, error) {
-	req, err := http.NewRequest("GET", client.url(endpoint), nil)
+	req, err := http.NewRequest(http.MethodGet, client.url(endpoint), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -161,7 +154,7 @@ func (client *Client) get(ctx context.Context, endpoint string, query url.Values
 }
 
 func (client *Client) post(ctx context.Context, endpoint string, body io.Reader) (*http.Response, error) {
-	req, err := http.NewRequest("POST", client.url(endpoint), body)
+	req, err := http.NewRequest(http.MethodPost, client.url(endpoint), body)
 	if err != nil {
 		return nil, err
 	}
@@ -170,7 +163,7 @@ func (client *Client) post(ctx context.Context, endpoint string, body io.Reader)
 }
 
 func (client *Client) put(ctx context.Context, endpoint string, body io.Reader) (*http.Response, error) {
-	req, err := http.NewRequest("PUT", client.url(endpoint), body)
+	req, err := http.NewRequest(http.MethodPut, client.url(endpoint), body)
 	if err != nil {
 		return nil, err
 	}
@@ -179,7 +172,7 @@ func (client *Client) put(ctx context.Context, endpoint string, body io.Reader) 
 }
 
 func (client *Client) delete(ctx context.Context, endpoint string) (*http.Response, error) {
-	req, err := http.NewRequest("DELETE", client.url(endpoint), nil)
+	req, err := http.NewRequest(http.MethodDelete, client.url(endpoint), nil)
 	if err != nil {
 		return nil, err
 	}

@@ -66,8 +66,14 @@ type MessagesNumberResponse struct {
 
 // MessageQuotaResponse type
 type MessageQuotaResponse struct {
-	Type  string
-	Value int64
+	Type       string
+	Value      int64
+	TotalUsage int64 `json:"totalUsage"`
+}
+
+// MessageConsumptionResponse type
+type MessageConsumptionResponse struct {
+	TotalUsage int64
 }
 
 // RichMenuIDResponse type
@@ -184,6 +190,18 @@ func decodeToMessageQuotaResponse(res *http.Response) (*MessageQuotaResponse, er
 	}
 	decoder := json.NewDecoder(res.Body)
 	result := &MessageQuotaResponse{}
+	if err := decoder.Decode(result); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func decodeToMessageConsumptionResponse(res *http.Response) (*MessageConsumptionResponse, error) {
+	if err := checkResponse(res); err != nil {
+		return nil, err
+	}
+	decoder := json.NewDecoder(res.Body)
+	result := &MessageConsumptionResponse{}
 	if err := decoder.Decode(result); err != nil {
 		return nil, err
 	}
