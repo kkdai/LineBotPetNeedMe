@@ -1,14 +1,12 @@
-流浪動物領養 Line 機器人: 透過 Line 可以查看目前流浪動物收容所的動物資料．
+流浪動物領養 LINE 機器人: 透過 LINE 可以查看目前流浪動物收容所的動物資料．
 ==============
-
-[![Join the chat at https://gitter.im/kkdai/LineBotPetNeedMe](https://badges.gitter.im/kkdai/LineBotPetNeedMe.svg)](https://gitter.im/kkdai/LineBotPetNeedMe?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
  [![GoDoc](https://godoc.org/github.com/kkdai/LineBotPetNeedMe?status.svg)](https://godoc.org/github.com/kkdai/LineBotPetNeedMe)  [![Build Status](https://travis-ci.org/kkdai/LineBotPetNeedMe.svg?branch=master)](https://travis-ci.org/kkdai/LineBotPetNeedMe)
 
 
 ![](http://petneed.me/static//img/petNeedme_full_color.png)
 
-透過 Line 來查看台北市目前有哪些流浪動物需要領養？ 請用你的  QR Code 掃描並且加入為好友．
+透過 LINE 來查看台北市目前有哪些流浪動物需要領養？ 請用你的 QR Code 掃描並且加入為好友．
 
 ![](images/QR.png)
 
@@ -34,10 +32,10 @@
 
 
 
-想要自己架設一個 Line 機器人?
+想要自己架設一個 LINE 機器人?
 =============
 
-參考我的[教學文章([Golang][教學] 在 Heroku 建立你自己的 Line 機器人 (Line Bot API))](http://www.evanlin.com/create-your-line-bot-golang/)，或是[教學 Github ](https://github.com/kkdai/LineBotTemplate)
+參考我的[教學文章([Golang][教學] 在 Heroku 建立你自己的 LINE 機器人 (LINE Bot API))](http://www.evanlin.com/create-your-line-bot-golang/)，或是[教學 Github ](https://github.com/kkdai/LineBotTemplate)
 
 
 Inspired By
