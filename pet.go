@@ -69,7 +69,7 @@ type Pet struct {
 //PetType :
 func (p *Pet) PetType() PetType {
 	var retType PetType
-	switch p.Type {
+	switch p.Variety {
 	case "犬":
 		retType = Dog
 	case "貓":
