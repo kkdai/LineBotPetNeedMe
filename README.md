@@ -11,6 +11,9 @@
 ![](images/QR.png)
 
 
+或是點擊這個鏈結加入 LINE 好友 [https://lin.ee/iJRpdZO](https://lin.ee/iJRpdZO)
+
+
 主要功能:
 =============
 
