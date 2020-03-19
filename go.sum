@@ -1,12 +1,7 @@
-github.com/kkdai/line-bot-sdk-go v1.3.0 h1:hcqqM5fKQaJlEbsetzvG/Z2AOT8OA2tk9/EYQlhEE5k=
 github.com/kkdai/line-bot-sdk-go v6.2.0+incompatible h1:OJ3CJnU3Wr4zvAzwH7uQZpZ6yHLo1fJ1hVktgoe7uwM=
 github.com/kkdai/line-bot-sdk-go v6.2.0+incompatible/go.mod h1:G8ZdzE4krL01/9/QkaphgJPsbS5xtoaVIusHWU0tVqs=
-github.com/line/line-bot-sdk-go v7.0.0+incompatible h1:acE7tNPK6EoWcxBcoYzF4p+LGbjMw6M9drYi3am5XkA=
-github.com/line/line-bot-sdk-go v7.0.0+incompatible/go.mod h1:0RjLjJEAU/3GIcHkC3av6O4jInAbt25nnZVmOFUgDBg=
 github.com/line/line-bot-sdk-go v7.2.0+incompatible h1:RnnXMEAvP8LpuPqTiDaU1LCgU9yVHXFRH74AdGcbyPs=
 github.com/line/line-bot-sdk-go v7.2.0+incompatible/go.mod h1:0RjLjJEAU/3GIcHkC3av6O4jInAbt25nnZVmOFUgDBg=
-golang.org/x/text v0.3.1-0.20181030141323-6f44c5a2ea40 h1:BtUFROTRzj9Y8jXjyUJ4NogzXn+sSbruLbjIbdkd7VE=
-golang.org/x/text v0.3.1-0.20181030141323-6f44c5a2ea40/go.mod h1:bEr9sfX3Q8Zfm5fL9x+3itogRgK3+ptLWKqgva+5dAk=
 golang.org/x/text v0.3.2 h1:tW2bmiBqwgJj/UpqtC8EpXEZVYOwU0yG4iWbprSVAcs=
 golang.org/x/text v0.3.2/go.mod h1:bEr9sfX3Q8Zfm5fL9x+3itogRgK3+ptLWKqgva+5dAk=
 golang.org/x/tools v0.0.0-20180917221912-90fa682c2a6e h1:FDhOuMEY4JVRztM/gsbk+IKUQ8kj74bxZrgw87eMMVc=
