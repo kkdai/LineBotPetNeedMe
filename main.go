@@ -21,7 +21,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/line/line-bot-sdk-go/linebot"
+	"github.com/kkdai/line-bot-sdk-go/linebot"
 )
 
 var ImgSrv string = "https://img-cache-server.herokuapp.com/"
