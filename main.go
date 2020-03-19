@@ -83,12 +83,16 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
 				var pet *Pet
+				var sendr *linebot.Sender
 				log.Println(message.Text)
 				inText := strings.ToLower(message.Text)
 				if strings.Contains(inText, "狗") || strings.Contains(inText, "dog") {
 					pet = PetDB.GetNextDog()
+					sendr = linebot.NewSender("Brown", "https://stickershop.line-scdn.net/stickershop/v1/sticker/52002749/iPhone/sticker_key@2x.png")
+
 				} else if strings.Contains(inText, "貓") || strings.Contains(inText, "cat") {
 					pet = PetDB.GetNextCat()
+					sendr = linebot.NewSender("Sally", "https://stickershop.line-scdn.net/stickershop/v1/sticker/52002736/iPhone/sticker_key@2x.png")
 				}
 
 				if pet == nil {
@@ -97,7 +101,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 
 				out := pet.DisplayPet()
 				if len(pet.ImageName) > 0 {
-					if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(out), linebot.NewImageMessage(pet.ImageName, pet.ImageName)).Do(); err != nil {
+					if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(out).WithSender(sendr), linebot.NewImageMessage(pet.ImageName, pet.ImageName)).Do(); err != nil {
 						log.Print(err)
 					}
 				} else if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(out)).Do(); err != nil {

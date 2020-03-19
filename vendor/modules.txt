@@ -1,0 +1,11 @@
+# github.com/kkdai/line-bot-sdk-go v7.2.1+incompatible
+## explicit
+github.com/kkdai/line-bot-sdk-go/linebot
+# github.com/line/line-bot-sdk-go v7.2.0+incompatible
+## explicit
+# golang.org/x/text v0.3.2
+## explicit
+golang.org/x/text/encoding
+golang.org/x/text/encoding/internal/identifier
+golang.org/x/text/encoding/unicode/utf32
+golang.org/x/text/transform
