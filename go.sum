@@ -1,7 +1,5 @@
-github.com/kkdai/line-bot-sdk-go v7.2.1+incompatible h1:GXeEil2WWJIsWpvOk2EMyDGwsg2930kJGrvqibRJ7JM=
-github.com/kkdai/line-bot-sdk-go v7.2.1+incompatible/go.mod h1:G8ZdzE4krL01/9/QkaphgJPsbS5xtoaVIusHWU0tVqs=
-github.com/line/line-bot-sdk-go v7.2.0+incompatible h1:RnnXMEAvP8LpuPqTiDaU1LCgU9yVHXFRH74AdGcbyPs=
-github.com/line/line-bot-sdk-go v7.2.0+incompatible/go.mod h1:0RjLjJEAU/3GIcHkC3av6O4jInAbt25nnZVmOFUgDBg=
+github.com/line/line-bot-sdk-go v7.3.0+incompatible h1:YTOjqMV1ajAoAHu4kDRQ4pVbotbTQ4JGWrwKv29WtMc=
+github.com/line/line-bot-sdk-go v7.3.0+incompatible/go.mod h1:0RjLjJEAU/3GIcHkC3av6O4jInAbt25nnZVmOFUgDBg=
 golang.org/x/text v0.3.2 h1:tW2bmiBqwgJj/UpqtC8EpXEZVYOwU0yG4iWbprSVAcs=
 golang.org/x/text v0.3.2/go.mod h1:bEr9sfX3Q8Zfm5fL9x+3itogRgK3+ptLWKqgva+5dAk=
 golang.org/x/tools v0.0.0-20180917221912-90fa682c2a6e/go.mod h1:n7NCudcB/nEzxVGmLbDWY5pfWTLqBcC2KZ6jyYvM4mQ=
