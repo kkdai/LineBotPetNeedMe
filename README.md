@@ -19,9 +19,11 @@
 
 目前僅僅支援顯示台北市流浪動物資料，並且顯示該動物圖片．
 
-![](images/LineDialog.png)
+![](images/petneedme.gif)
 
-歡迎各位建議任何新的功能．
+( Youtube: [here](https://www.youtube.com/watch?v=B9m_6brhkdc) )
+
+歡迎各位建議任何新的功能。 
 
 資料來源:
 =============
