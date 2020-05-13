@@ -101,10 +101,10 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 
 				out := pet.DisplayPet()
 				if len(pet.ImageName) > 0 {
-					if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(out).WithSender(sendr).AddEmoji(linebot.NewEmoji(0, "5ac1bfd5040ab15980c9b435", "086")), linebot.NewImageMessage(pet.ImageName, pet.ImageName).WithSender(sendr)).Do(); err != nil {
+					if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(out).WithSender(sendr).AddEmoji(linebot.NewEmoji(1, "5ac1bfd5040ab15980c9b435", "086")), linebot.NewImageMessage(pet.ImageName, pet.ImageName).WithSender(sendr)).Do(); err != nil {
 						log.Print(err)
 					}
-				} else if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(out).WithSender(sendr).AddEmoji(linebot.NewEmoji(0, "5ac1bfd5040ab15980c9b435", "086"))).Do(); err != nil {
+				} else if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(out).WithSender(sendr).AddEmoji(linebot.NewEmoji(1, "5ac1bfd5040ab15980c9b435", "086"))).Do(); err != nil {
 					log.Print(err)
 				}
 			}
