@@ -71,5 +71,5 @@ func (p *Pet) DisplayPet() string {
 		log.Println("img:", p.ImageName)
 	}
 
-	return fmt.Sprintf("$ 您好 \n 動物品種: %s \n 毛色: %s \n 體型: %s \n 性別: %s \n 名為: %s \n 公告收容所: %s \n 領養電話為: %s  \n 圖片位置: %s", p.Variety, p.HairType, p.Type, p.Sex, p.Name, p.Resettlement, p.Phone, p.ImageName)
+	return fmt.Sprintf(" $ 您好 \n 動物品種: %s \n 毛色: %s \n 體型: %s \n 性別: %s \n 名為: %s \n 公告收容所: %s \n 領養電話為: %s  \n 圖片位置: %s", p.Variety, p.HairType, p.Type, p.Sex, p.Name, p.Resettlement, p.Phone, p.ImageName)
 }
