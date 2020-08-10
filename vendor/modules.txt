@@ -1,9 +1,5 @@
-# github.com/line/line-bot-sdk-go v7.4.0+incompatible
+# github.com/line/line-bot-sdk-go v7.5.0+incompatible
 ## explicit
 github.com/line/line-bot-sdk-go/linebot
 # golang.org/x/text v0.3.2
 ## explicit
-golang.org/x/text/encoding
-golang.org/x/text/encoding/internal/identifier
-golang.org/x/text/encoding/unicode/utf32
-golang.org/x/text/transform

@@ -16,7 +16,8 @@ package linebot
 
 // Emoji type
 type Emoji struct {
-	Index     int    `json:"index,omitempty"`
+	Index     int    `json:"index"`
+	Length    int    `json:"length,omitempty"`
 	ProductID string `json:"productId,omitempty"`
 	EmojiID   string `json:"emojiId,omitempty"`
 }
