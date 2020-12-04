@@ -81,7 +81,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		switch event.Type {
 		case linebot.EventTypeUnsend:
 			log.Println("Unsend")
-			if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("不要害羞回收訊息，趕快打狗或是貓來看流浪動物。")).Do(); err != nil {
+			if _, err = bot.PushMessage(event.Source.UserID, linebot.NewTextMessage("不要害羞地回收訊息，趕快打狗或是貓來看流浪動物。")).Do(); err != nil {
 				log.Print(err)
 			}
 
