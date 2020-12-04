@@ -79,6 +79,12 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	for _, event := range events {
 		switch event.Type {
+		case linebot.EventTypeUnsend:
+			sendr := linebot.NewSender("Brown", "https://stickershop.line-scdn.net/stickershop/v1/sticker/52002749/iPhone/sticker_key@2x.png")
+			if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("不要害羞回收訊息，趕快打狗或是貓來看流浪動物。").WithSender(sendr)).Do(); err != nil {
+				log.Print(err)
+			}
+
 		case linebot.EventTypeMessage:
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
