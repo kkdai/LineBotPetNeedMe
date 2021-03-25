@@ -2,6 +2,8 @@
 ==============
 
  [![GoDoc](https://godoc.org/github.com/kkdai/LineBotPetNeedMe?status.svg)](https://godoc.org/github.com/kkdai/LineBotPetNeedMe)  [![Build Status](https://travis-ci.org/kkdai/LineBotPetNeedMe.svg?branch=master)](https://travis-ci.org/kkdai/LineBotPetNeedMe)
+![Go](https://github.com/kkdai/LineBotPetNeedMe/workflows/Go/badge.svg)
+
 
 
 ![](http://petneed.me/static//img/petNeedme_full_color.png)
