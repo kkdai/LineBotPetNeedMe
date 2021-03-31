@@ -46,14 +46,16 @@ func (p *Pets) GetNextDog() *Pet {
 		p.getPets()
 	}
 
-	var retPet *Pet
-	for _, p := range p.allPets {
-		if p.PetType() == Dog {
-			retPet = &p
+	for {
+		q := p.GetNextPet()
+		if q == nil {
 			break
 		}
+		if q.PetType() == Dog {
+			return q
+		}
 	}
-	return retPet
+	return nil
 }
 
 //GetNextCat :
@@ -62,14 +64,16 @@ func (p *Pets) GetNextCat() *Pet {
 		p.getPets()
 	}
 
-	var retPet *Pet
-	for _, p := range p.allPets {
-		if p.PetType() == Cat {
-			retPet = &p
+	for {
+		q := p.GetNextPet()
+		if q == nil {
 			break
 		}
+		if q.PetType() == Cat {
+			return q
+		}
 	}
-	return retPet
+	return nil
 }
 
 //GetPetsCount :
