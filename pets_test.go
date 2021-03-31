@@ -13,12 +13,16 @@
 package main
 
 import (
-	"log"
+	"strings"
 	"testing"
 )
 
 func TestPetsRetreival(t *testing.T) {
 	pets := NewPets()
+	if pets == nil {
+		t.Error("Cannot get pet..")
+	}
+
 	if count := pets.GetPetsCount(); count == 0 {
 		t.Error("Cannot get any pets from Taipei Open Data, count:", count)
 	}
@@ -26,20 +30,30 @@ func TestPetsRetreival(t *testing.T) {
 
 func TestGetPet(t *testing.T) {
 	pets := NewPets()
+	if pets == nil {
+		t.Error("Cannot get pet..")
+	}
+
 	pet := pets.GetNextPet()
 	if pet == nil {
 		t.Error("Cannot get pet..")
 	}
 
-	log.Println(pet.DisplayPet())
-	log.Println(pet)
+	// log.Println(pet.DisplayPet())
+	// log.Println(pet)
 }
 
 func TestGetMultiplePets(t *testing.T) {
 	pets := NewPets()
+	if pets == nil {
+		t.Error("Cannot get pet..")
+	}
+
 	for i := 0; i < pets.GetPetsCount(); i++ {
 		pet := pets.GetNextPet()
-		log.Println(pet.DisplayPet())
+		if pet == nil {
+			t.Error("No pet get!")
+		}
 	}
 }
 
@@ -55,7 +69,7 @@ func TestGetCat(t *testing.T) {
 		t.Skip("Get cat error")
 		return
 	}
-	log.Println("Get cat:", pet)
+	// log.Println("Get cat:", pet)
 }
 
 func TestGetDog(t *testing.T) {
@@ -69,5 +83,40 @@ func TestGetDog(t *testing.T) {
 		t.Error("Get dog error")
 		return
 	}
-	log.Println("Get Dog:", pet)
+	// log.Println("Get Dog:", pet)
+}
+
+func TestGetNextDog(t *testing.T) {
+	pets := NewPets()
+	if pets == nil {
+		t.Error("Cannot get pet..")
+	}
+
+	pet1 := pets.GetNextDog()
+	if pet1 == nil {
+		t.Error("Cannot get the first pet..")
+		return
+	}
+
+	if pet1.PetType() != Dog {
+		t.Error("Get 1st dog error")
+		return
+	}
+
+	pet2 := pets.GetNextDog()
+	if pet2 == nil {
+		t.Error("Cannot get the second pet..")
+		return
+	}
+
+	if pet2.PetType() != Dog {
+		t.Error("Get 2nd dog error")
+		return
+	}
+
+	if strings.Compare(pet1.Name, pet2.Name) == 0 {
+		t.Error("Get the same dogs:", pet1, pet2)
+	}
+
+	// log.Println("Get Dogs:", pet1, pet2)
 }
