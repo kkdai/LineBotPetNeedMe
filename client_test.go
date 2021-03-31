@@ -14,9 +14,14 @@ package main
 
 import (
 	"encoding/json"
+	"io/ioutil"
 	"log"
 	"testing"
 )
+
+func init() {
+	log.SetOutput(ioutil.Discard)
+}
 
 //TestTaipeiPetsData :Test if Taipei Pet data still exist
 func TestTaipeiPetsData(t *testing.T) {
@@ -31,7 +36,7 @@ func TestTaipeiPetsData(t *testing.T) {
 	err = json.Unmarshal(body, &results)
 
 	if err != nil {
-		log.Fatal(err)
+		t.Fatal(err)
 	}
-	// log.Println("Client Data:", results)
+	log.Println("Client Data:", results)
 }

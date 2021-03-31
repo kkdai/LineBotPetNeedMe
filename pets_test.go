@@ -13,10 +13,15 @@
 package main
 
 import (
+	"io/ioutil"
+	"log"
 	"strings"
 	"testing"
 )
 
+func init() {
+	log.SetOutput(ioutil.Discard)
+}
 func TestPetsRetreival(t *testing.T) {
 	pets := NewPets()
 	if pets == nil {
@@ -39,8 +44,8 @@ func TestGetPet(t *testing.T) {
 		t.Error("Cannot get pet..")
 	}
 
-	// log.Println(pet.DisplayPet())
-	// log.Println(pet)
+	log.Println(pet.DisplayPet())
+	log.Println(pet)
 }
 
 func TestGetMultiplePets(t *testing.T) {
@@ -69,7 +74,7 @@ func TestGetCat(t *testing.T) {
 		t.Skip("Get cat error")
 		return
 	}
-	// log.Println("Get cat:", pet)
+	log.Println("Get cat:", pet)
 }
 
 func TestGetDog(t *testing.T) {
@@ -83,7 +88,7 @@ func TestGetDog(t *testing.T) {
 		t.Error("Get dog error")
 		return
 	}
-	// log.Println("Get Dog:", pet)
+	log.Println("Get Dog:", pet)
 }
 
 func TestGetNextDog(t *testing.T) {
@@ -118,5 +123,5 @@ func TestGetNextDog(t *testing.T) {
 		t.Error("Get the same dogs:", pet1, pet2)
 	}
 
-	// log.Println("Get Dogs:", pet1, pet2)
+	log.Println("Get Dogs:", pet1, pet2)
 }
