@@ -14,7 +14,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"net/url"
@@ -24,14 +24,16 @@ import (
 	"github.com/line/line-bot-sdk-go/v7/linebot"
 )
 
-var ImgSrv string = "https://img-cache-server.herokuapp.com/"
+var ImgSrv string
 var bot *linebot.Client
 
-//PetDB :
+// PetDB :
 var PetDB *Pets
 
 func main() {
 	var err error
+	ImgSrv = os.Getenv("IMG_SRV")
+
 	PetDB = NewPets()
 	bot, err = linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
 	log.Println("Bot:", bot, " err:", err)
@@ -57,7 +59,7 @@ func getSecureImageAddress(oriAdd string) string {
 		return ""
 	}
 
-	totalBody, err := ioutil.ReadAll(response.Body)
+	totalBody, err := io.ReadAll(response.Body)
 	if err != nil {
 		log.Println("Error while parsing:", err)
 		return ""
