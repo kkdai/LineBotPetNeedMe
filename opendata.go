@@ -14,7 +14,7 @@ package main
 
 // 「政府資料開放平臺: 動物認領養」API存取: https://data.gov.tw/dataset/85903
 const (
-	OpenDataURL string = "https://data.coa.gov.tw/Service/OpenData/TransService.aspx?UnitId=QcbUEzN6E6DL&$top=50&$skip=0"
+	OpenDataURL string = "https://data.moa.gov.tw/Service/OpenData/TransService.aspx?UnitId=QcbUEzN8_3iL&$top=50&$skip=0"
 )
 
 type TaiwanPets []TaiwanPet
