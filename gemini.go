@@ -29,6 +29,7 @@ type SearchCriteria struct {
 	Sex      string `json:"sex,omitempty"`
 	BodyType string `json:"body_type,omitempty"`
 	Age      string `json:"age,omitempty"`
+	Color    string `json:"color,omitempty"`
 }
 
 var genaiClient *genai.GenerativeModel
@@ -63,6 +64,7 @@ Based on the request, identify the following criteria:
 - sex: "公" or "母"
 - body_type: "小型", "中型", or "大型"
 - age: "幼年", "成年"
+- color: "白", "黑", "黃", "棕", "灰", "虎斑", "三花", "其他"
 
 Return the criteria as a JSON object. If a criterion is not mentioned, omit it from the JSON.
 For example, if the user says "我想找一隻小隻的母狗", you should return:

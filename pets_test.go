@@ -130,3 +130,30 @@ func TestGetNextDog(t *testing.T) {
 
 	log.Println("Get Dogs:", pet1, pet2)
 }
+
+func TestSearchPets(t *testing.T) {
+	pets := NewPets()
+	if pets == nil {
+		t.Error("Cannot get pet..")
+	}
+
+	criteria := &SearchCriteria{
+		Kind:  "狗",
+		Color: "白",
+	}
+
+	results := pets.SearchPets(criteria)
+
+	if len(results) == 0 {
+		t.Error("No white dogs found")
+	}
+
+	for _, pet := range results {
+		if pet.Variety != "狗" {
+			t.Errorf("Expected dog, but got %s", pet.Variety)
+		}
+		if !strings.Contains(pet.HairType, "白") {
+			t.Errorf("Expected white dog, but got %s", pet.HairType)
+		}
+	}
+}

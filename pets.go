@@ -16,6 +16,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"strings"
 )
 
 //Pets :All pet related API
@@ -153,6 +154,11 @@ func (p *Pets) SearchPets(criteria *SearchCriteria) []*Pet {
 		}
 		// Age check
 		if criteria.Age != "" && pet.Age != criteria.Age {
+			match = false
+		}
+
+		// Color check
+		if criteria.Color != "" && !strings.Contains(pet.HairType, criteria.Color) {
 			match = false
 		}
 
