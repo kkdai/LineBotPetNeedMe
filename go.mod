@@ -1,6 +1,6 @@
 module github.com/kkdai/LineBotPetNeedMe
 
-go 1.23
+go 1.22
 
 require (
 	github.com/line/line-bot-sdk-go/v7 v7.20.0
