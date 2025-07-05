@@ -82,7 +82,9 @@ func (p *Pets) GetPetsCount() int {
 }
 
 func (p *Pets) getPets() {
-	c := NewClient(OpenDataURL)
+	// We add $top and $skip to get data since the API might not return all data at once.
+	url := fmt.Sprintf("%s&$top=100&$skip=0", OpenDataURL)
+	c := NewClient(url)
 	body, err := c.GetHttpRes()
 	if err != nil {
 		return
