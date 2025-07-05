@@ -114,6 +114,7 @@ func (p *Pets) LoadPets(pets TaiwanPets) {
 	//Mapping
 	for _, v := range pets {
 		pt := Pet{}
+		pt.ID = v.AnimalID
 		pt.Name = v.AnimalSubid
 		pt.ImageName = v.AlbumFile
 		pt.HairType = v.AnimalColour
@@ -125,4 +126,18 @@ func (p *Pets) LoadPets(pets TaiwanPets) {
 		pt.Note = v.AnimalRemark
 		p.allPets = append(p.allPets, pt)
 	}
+}
+
+//GetPet :
+func (p *Pets) GetPet(id int) *Pet {
+	if len(p.allPets) == 0 {
+		p.getPets()
+	}
+
+	for _, pet := range p.allPets {
+		if pet.ID == id {
+			return &pet
+		}
+	}
+	return nil
 }

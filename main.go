@@ -19,7 +19,9 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/line/line-bot-sdk-go/v8/linebot"
 )
@@ -29,6 +31,8 @@ var bot *linebot.Client
 
 // PetDB :
 var PetDB *Pets
+var userFavorites = make(map[string][]*Pet)
+var favoritesMutex = &sync.Mutex{}
 
 func main() {
 	var err error
@@ -41,6 +45,99 @@ func main() {
 	port := os.Getenv("PORT")
 	addr := fmt.Sprintf(":%s", port)
 	http.ListenAndServe(addr, nil)
+}
+
+func newPetFlexMessage(pet *Pet) *linebot.FlexMessage {
+	// Share button
+	shareURI := fmt.Sprintf("line://msg/text/?%s", url.QueryEscape(pet.DisplayPet()))
+	shareButton := linebot.NewButtonComponent(
+		linebot.FlexButtonColorTypePrimary,
+		linebot.FlexButtonColorTypePrimary,
+		linebot.FlexHeightTypeSm,
+		linebot.FlexButtonStyleTypeLink,
+		linebot.NewURIAction("分享給好友", shareURI),
+	)
+
+	// Favorite button
+	favoriteButton := linebot.NewButtonComponent(
+		linebot.FlexButtonColorTypePrimary,
+		linebot.FlexButtonColorTypePrimary,
+		linebot.FlexHeightTypeSm,
+		linebot.FlexButtonStyleTypePrimary,
+		linebot.NewPostbackAction("加入收藏", "action=favorite&petID="+strconv.Itoa(pet.ID), "", "加入收藏", "", ""),
+	)
+
+	bubble := &linebot.BubbleContainer{
+		Type: linebot.FlexContainerTypeBubble,
+		Hero: &linebot.ImageComponent{
+			Type:        linebot.FlexComponentTypeImage,
+			URL:         pet.ImageName,
+			Size:        linebot.FlexImageSizeTypeFull,
+			AspectRatio: linebot.FlexImageAspectRatioType20to13,
+			AspectMode:  linebot.FlexImageAspectModeTypeCover,
+		},
+		Body: &linebot.BoxComponent{
+			Type:   linebot.FlexComponentTypeBox,
+			Layout: linebot.FlexBoxLayoutTypeVertical,
+			Contents: []linebot.FlexComponent{
+				&linebot.TextComponent{
+					Type:   linebot.FlexComponentTypeText,
+					Text:   pet.Name,
+					Weight: linebot.FlexTextWeightTypeBold,
+					Size:   linebot.FlexTextSizeTypeXl,
+				},
+				&linebot.BoxComponent{
+					Type:   linebot.FlexComponentTypeBox,
+					Layout: linebot.FlexBoxLayoutTypeVertical,
+					Margin: linebot.FlexComponentMarginTypeLg,
+					Contents: []linebot.FlexComponent{
+						createDetailRow("種類", pet.Variety),
+						createDetailRow("性別", pet.Sex),
+						createDetailRow("體型", pet.Type),
+						createDetailRow("毛色", pet.HairType),
+						createDetailRow("年紀", pet.Age),
+						createDetailRow("收容所", pet.Resettlement),
+					},
+				},
+			},
+		},
+		Footer: &linebot.BoxComponent{
+			Type:   linebot.FlexComponentTypeBox,
+			Layout: linebot.FlexBoxLayoutTypeVertical,
+			Spacing: linebot.FlexComponentSpacingTypeSm,
+			Contents: []linebot.FlexComponent{
+				favoriteButton,
+				shareButton,
+			},
+		},
+	}
+
+	return linebot.NewFlexMessage("寵物資���", bubble)
+}
+
+func createDetailRow(title, value string) *linebot.BoxComponent {
+	return &linebot.BoxComponent{
+		Type:   linebot.FlexComponentTypeBox,
+		Layout: linebot.FlexBoxLayoutTypeBaseline,
+		Spacing: linebot.FlexComponentSpacingTypeSm,
+		Contents: []linebot.FlexComponent{
+			&linebot.TextComponent{
+				Type:  linebot.FlexComponentTypeText,
+				Text:  title,
+				Color: "#aaaaaa",
+				Size:  linebot.FlexTextSizeTypeSm,
+				Flex:  linebot.IntPtr(2),
+			},
+			&linebot.TextComponent{
+				Type:  linebot.FlexComponentTypeText,
+				Text:  value,
+				Wrap:  true,
+				Color: "#666666",
+				Size:  linebot.FlexTextSizeTypeSm,
+				Flex:  linebot.IntPtr(5),
+			},
+		},
+	}
 }
 
 func getSecureImageAddress(oriAdd string) string {
@@ -81,6 +178,38 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	for _, event := range events {
 		switch event.Type {
+		case linebot.EventTypePostback:
+			data := event.Postback.Data
+			params, err := url.ParseQuery(data)
+			if err != nil {
+				log.Printf("Failed to parse postback data: %s", err)
+				continue
+			}
+			action := params.Get("action")
+			if action == "favorite" {
+				petIDStr := params.Get("petID")
+				petID, err := strconv.Atoi(petIDStr)
+				if err != nil {
+					log.Printf("Invalid pet ID: %s", petIDStr)
+					continue
+				}
+
+				pet := PetDB.GetPet(petID)
+				if pet == nil {
+					log.Printf("Pet with ID %d not found", petID)
+					continue
+				}
+
+				favoritesMutex.Lock()
+				userFavorites[event.Source.UserID] = append(userFavorites[event.Source.UserID], pet)
+				favoritesMutex.Unlock()
+
+				log.Printf("User %s favorited pet %d", event.Source.UserID, petID)
+				if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("已將寵物加入您的收藏！")).Do(); err != nil {
+					log.Print(err)
+				}
+			}
+
 		case linebot.EventTypeUnsend:
 			log.Println("Unsend")
 			target := ""
@@ -97,29 +226,55 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
 				var pet *Pet
-				var sendr *linebot.Sender
 				log.Println(message.Text)
 				inText := strings.ToLower(message.Text)
 				if strings.Contains(inText, "狗") || strings.Contains(inText, "dog") {
 					pet = PetDB.GetNextDog()
-					sendr = linebot.NewSender("Brown", "https://stickershop.line-scdn.net/stickershop/v1/sticker/52002749/iPhone/sticker_key@2x.png")
-
 				} else if strings.Contains(inText, "貓") || strings.Contains(inText, "cat") {
 					pet = PetDB.GetNextCat()
-					sendr = linebot.NewSender("Sally", "https://stickershop.line-scdn.net/stickershop/v1/sticker/52002736/iPhone/sticker_key@2x.png")
+				} else if strings.Contains(inText, "收藏") {
+					favoritesMutex.Lock()
+					favs := userFavorites[event.Source.UserID]
+					favoritesMutex.Unlock()
+
+					if len(favs) == 0 {
+						if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("您尚未收藏任何寵物。")).Do(); err != nil {
+							log.Print(err)
+						}
+						return
+					}
+
+					var bubbles []*linebot.BubbleContainer
+					for _, p := range favs {
+						bubbles = append(bubbles, newPetFlexMessage(p).Contents.(*linebot.BubbleContainer))
+					}
+
+					carousel := &linebot.CarouselContainer{
+						Type:     linebot.FlexContainerTypeCarousel,
+						Contents: bubbles,
+					}
+
+					if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewFlexMessage("您的收藏清單", carousel)).Do(); err != nil {
+						log.Print(err)
+					}
+					return
 				}
 
 				if pet == nil {
 					pet = PetDB.GetNextPet()
 				}
 
-				out := pet.DisplayPet()
-				if len(pet.ImageName) > 0 {
-					if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(out).WithSender(sendr).AddEmoji(linebot.NewEmoji(1, "5ac1bfd5040ab15980c9b435", "086")), linebot.NewImageMessage(pet.ImageName, pet.ImageName).WithSender(sendr)).Do(); err != nil {
+				if pet != nil && len(pet.ImageName) > 0 {
+					pet.ImageName = getSecureImageAddress(pet.ImageName)
+					flexMessage := newPetFlexMessage(pet)
+					if _, err := bot.ReplyMessage(event.ReplyToken, flexMessage).Do(); err != nil {
 						log.Print(err)
 					}
-				} else if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(out).WithSender(sendr).AddEmoji(linebot.NewEmoji(1, "5ac1bfd5040ab15980c9b435", "086"))).Do(); err != nil {
-					log.Print(err)
+				} else if pet != nil {
+					out := pet.DisplayPet()
+					if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(out)).Do(); err != nil {
+						log.Print(err)
+					}
 				}
 			}
 		}

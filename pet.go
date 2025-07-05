@@ -29,7 +29,7 @@ const (
 
 //Pet :
 type Pet struct {
-	ID              string `json:"_id"`
+	ID              int `json:"_id"`
 	Name            string `json:"Name"`
 	Sex             string `json:"Sex"`
 	Type            string `json:"Type"`
@@ -66,10 +66,5 @@ func (p *Pet) PetType() PetType {
 
 //DisplayPet : Display single pet on chatbot
 func (p *Pet) DisplayPet() string {
-	if len(p.ImageName) > 0 {
-		p.ImageName = getSecureImageAddress(p.ImageName)
-		log.Println("img:", p.ImageName)
-	}
-
-	return fmt.Sprintf(" $ 您好 \n 動物品種: %s \n 毛色: %s \n 體型: %s \n 性別: %s \n 名為: %s \n 公告收容所: %s \n 領養電話為: %s  \n 圖片位置: %s", p.Variety, p.HairType, p.Type, p.Sex, p.Name, p.Resettlement, p.Phone, p.ImageName)
+	return fmt.Sprintf("快來看看這隻可愛的%s！\n名字: %s\n收容所: %s\n聯絡電話: %s", p.Variety, p.Name, p.Resettlement, p.Phone)
 }
