@@ -228,6 +228,46 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				var pet *Pet
 				log.Println(message.Text)
 				inText := strings.ToLower(message.Text)
+
+				// First, try to parse with Gemini
+				criteria, err := ParseSearchCriteriaFromQuery(inText)
+				if err != nil {
+					log.Printf("Gemini parsing error: %v", err)
+				}
+
+				if criteria != nil {
+					log.Printf("Gemini parsed criteria: %+v", criteria)
+					results := PetDB.SearchPets(criteria)
+					if len(results) == 0 {
+						if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("很抱歉，目前沒有找到符合條件的寵物。")).Do(); err != nil {
+							log.Print(err)
+						}
+						return
+					}
+
+					var bubbles []*linebot.BubbleContainer
+					for _, p := range results {
+						if len(p.ImageName) > 0 {
+							p.ImageName = getSecureImageAddress(p.ImageName)
+						}
+						bubbles = append(bubbles, newPetFlexMessage(p).Contents.(*linebot.BubbleContainer))
+						if len(bubbles) == 10 { // Carousel limit is 10
+							break
+						}
+					}
+
+					carousel := &linebot.CarouselContainer{
+						Type:     linebot.FlexContainerTypeCarousel,
+						Contents: bubbles,
+					}
+
+					if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewFlexMessage("為您找到這些寵物", carousel)).Do(); err != nil {
+						log.Print(err)
+					}
+					return
+				}
+
+				// Fallback to original logic
 				if strings.Contains(inText, "狗") || strings.Contains(inText, "dog") {
 					pet = PetDB.GetNextDog()
 				} else if strings.Contains(inText, "貓") || strings.Contains(inText, "cat") {

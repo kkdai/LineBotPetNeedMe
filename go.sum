@@ -1,2 +1,4 @@
+github.com/google/generative-ai-go v0.20.1 h1:6dEIujpgN2V0PgLhr6c/M1ynRdc7ARtiIDPFzj45uNQ=
+github.com/google/generative-ai-go v0.20.1/go.mod h1:TjOnZJmZKzarWbjUJgy+r3Ee7HGBRVLhOIgupnwR4Bg=
 github.com/line/line-bot-sdk-go/v8 v8.13.1 h1:IF3fCszwFgKN8fyxLvTRzY3KFAofY58H1NkN5Gnnd8E=
 github.com/line/line-bot-sdk-go/v8 v8.13.1/go.mod h1:jjmYNIH9+vxsGpgAY5Ov2dDfvMuamARaohxyr8l3siU=

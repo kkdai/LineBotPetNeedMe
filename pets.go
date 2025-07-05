@@ -124,8 +124,36 @@ func (p *Pets) LoadPets(pets TaiwanPets) {
 		pt.Phone = v.ShelterTel
 		pt.Sex = v.AnimalSex
 		pt.Note = v.AnimalRemark
+		pt.Age = v.AnimalAge
 		p.allPets = append(p.allPets, pt)
 	}
+}
+
+//SearchPets :
+func (p *Pets) SearchPets(criteria *SearchCriteria) []*Pet {
+	var result []*Pet
+	for i := range p.allPets {
+		pet := &p.allPets[i]
+		match := true
+
+		if criteria.Kind != "" && pet.Variety != criteria.Kind {
+			match = false
+		}
+		if criteria.Sex != "" && pet.Sex != criteria.Sex {
+			match = false
+		}
+		if criteria.BodyType != "" && pet.Type != criteria.BodyType {
+			match = false
+		}
+		if criteria.Age != "" && pet.Age != criteria.Age {
+			match = false
+		}
+
+		if match {
+			result = append(result, pet)
+		}
+	}
+	return result
 }
 
 //GetPet :
