@@ -91,6 +91,7 @@ func newPetFlexMessage(pet *Pet) *linebot.FlexMessage {
 						createDetailRow("毛色", pet.HairType),
 						createDetailRow("年紀", pet.Age),
 						createDetailRow("收容所", pet.Resettlement),
+						createDetailRow("聯絡電話", pet.Phone),
 					},
 				},
 			},
@@ -102,6 +103,10 @@ func newPetFlexMessage(pet *Pet) *linebot.FlexMessage {
 			Contents: []linebot.FlexComponent{
 				favoriteButton,
 				shareButton,
+				&linebot.ButtonComponent{
+					Style:  linebot.FlexButtonStyleTypeLink,
+					Action: linebot.NewURIAction("聯絡我", "tel:"+pet.Phone),
+				},
 			},
 		},
 	}
