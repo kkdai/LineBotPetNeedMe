@@ -139,15 +139,19 @@ func (p *Pets) SearchPets(criteria *SearchCriteria) []*Pet {
 		pet := &p.allPets[i]
 		match := true
 
+		// Kind check
 		if criteria.Kind != "" && pet.Variety != criteria.Kind {
 			match = false
 		}
+		// Sex check
 		if criteria.Sex != "" && pet.Sex != criteria.Sex {
 			match = false
 		}
+		// BodyType check
 		if criteria.BodyType != "" && pet.Type != criteria.BodyType {
 			match = false
 		}
+		// Age check
 		if criteria.Age != "" && pet.Age != criteria.Age {
 			match = false
 		}
