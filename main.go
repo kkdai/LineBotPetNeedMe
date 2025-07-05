@@ -90,7 +90,6 @@ func newPetFlexMessage(pet *Pet) *linebot.FlexMessage {
 			Contents: []linebot.FlexComponent{
 				createFavoriteButton(pet),
 				createShareButton(pet),
-				createCallButton(pet),
 			},
 		},
 	}
@@ -113,12 +112,7 @@ func createShareButton(pet *Pet) *linebot.ButtonComponent {
 	}
 }
 
-func createCallButton(pet *Pet) *linebot.ButtonComponent {
-	return &linebot.ButtonComponent{
-		Style:  linebot.FlexButtonStyleTypeLink,
-		Action: linebot.NewURIAction("聯絡我", "tel:"+pet.Phone),
-	}
-}
+
 
 func createDetailRow(title, value string) *linebot.BoxComponent {
 	return &linebot.BoxComponent{
