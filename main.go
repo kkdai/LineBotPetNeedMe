@@ -48,19 +48,6 @@ func main() {
 }
 
 func newPetFlexMessage(pet *Pet) *linebot.FlexMessage {
-	// Share button
-	shareURI := fmt.Sprintf("line://msg/text/?%s", url.QueryEscape(pet.DisplayPet()))
-	shareButton := &linebot.ButtonComponent{
-		Style:  linebot.FlexButtonStyleTypeLink,
-		Action: linebot.NewURIAction("分享給好友", shareURI),
-	}
-
-	// Favorite button
-	favoriteButton := &linebot.ButtonComponent{
-		Style:  linebot.FlexButtonStyleTypePrimary,
-				Action: linebot.NewMessageAction("加入收藏", "favorite "+strconv.Itoa(pet.ID)),
-	}
-
 	bubble := &linebot.BubbleContainer{
 		Type: linebot.FlexContainerTypeBubble,
 		Hero: &linebot.ImageComponent{
@@ -101,17 +88,36 @@ func newPetFlexMessage(pet *Pet) *linebot.FlexMessage {
 			Layout: linebot.FlexBoxLayoutTypeVertical,
 			Spacing: linebot.FlexComponentSpacingTypeSm,
 			Contents: []linebot.FlexComponent{
-				favoriteButton,
-				shareButton,
-				&linebot.ButtonComponent{
-					Style:  linebot.FlexButtonStyleTypeLink,
-					Action: linebot.NewURIAction("聯絡我", "tel:"+pet.Phone),
-				},
+				createFavoriteButton(pet),
+				createShareButton(pet),
+				createCallButton(pet),
 			},
 		},
 	}
 
-	return linebot.NewFlexMessage("寵物資���", bubble)
+	return linebot.NewFlexMessage("寵物資訊", bubble)
+}
+
+func createFavoriteButton(pet *Pet) *linebot.ButtonComponent {
+	return &linebot.ButtonComponent{
+		Style:  linebot.FlexButtonStyleTypePrimary,
+		Action: linebot.NewMessageAction("加入收藏", "favorite "+strconv.Itoa(pet.ID)),
+	}
+}
+
+func createShareButton(pet *Pet) *linebot.ButtonComponent {
+	shareURI := fmt.Sprintf("line://msg/text/?%s", url.QueryEscape(pet.DisplayPet()))
+	return &linebot.ButtonComponent{
+		Style:  linebot.FlexButtonStyleTypeLink,
+		Action: linebot.NewURIAction("分享給好友", shareURI),
+	}
+}
+
+func createCallButton(pet *Pet) *linebot.ButtonComponent {
+	return &linebot.ButtonComponent{
+		Style:  linebot.FlexButtonStyleTypeLink,
+		Action: linebot.NewURIAction("聯絡我", "tel:"+pet.Phone),
+	}
 }
 
 func createDetailRow(title, value string) *linebot.BoxComponent {
