@@ -23,7 +23,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/line/line-bot-sdk-go/v8/linebot"
+	"github.com/line/line-bot-sdk-go/v7/linebot"
 )
 
 var ImgSrv string
@@ -50,22 +50,16 @@ func main() {
 func newPetFlexMessage(pet *Pet) *linebot.FlexMessage {
 	// Share button
 	shareURI := fmt.Sprintf("line://msg/text/?%s", url.QueryEscape(pet.DisplayPet()))
-	shareButton := linebot.NewButtonComponent(
-		linebot.FlexButtonColorTypePrimary,
-		linebot.FlexButtonColorTypePrimary,
-		linebot.FlexHeightTypeSm,
-		linebot.FlexButtonStyleTypeLink,
-		linebot.NewURIAction("分享給好友", shareURI),
-	)
+	shareButton := &linebot.ButtonComponent{
+		Style:  linebot.FlexButtonStyleTypeLink,
+		Action: linebot.NewURIAction("分享給好友", shareURI),
+	}
 
 	// Favorite button
-	favoriteButton := linebot.NewButtonComponent(
-		linebot.FlexButtonColorTypePrimary,
-		linebot.FlexButtonColorTypePrimary,
-		linebot.FlexHeightTypeSm,
-		linebot.FlexButtonStyleTypePrimary,
-		linebot.NewPostbackAction("加入收藏", "action=favorite&petID="+strconv.Itoa(pet.ID), "", "加入收藏", "", ""),
-	)
+	favoriteButton := &linebot.ButtonComponent{
+		Style:  linebot.FlexButtonStyleTypePrimary,
+				Action: linebot.NewMessageAction("加入收藏", "favorite "+strconv.Itoa(pet.ID)),
+	}
 
 	bubble := &linebot.BubbleContainer{
 		Type: linebot.FlexContainerTypeBubble,
@@ -268,6 +262,31 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				}
 
 				// Fallback to original logic
+				if strings.HasPrefix(inText, "favorite") {
+					petIDStr := strings.TrimSpace(strings.TrimPrefix(inText, "favorite"))
+					petID, err := strconv.Atoi(petIDStr)
+					if err != nil {
+						log.Printf("Invalid pet ID: %s", petIDStr)
+						return
+					}
+
+					pet := PetDB.GetPet(petID)
+					if pet == nil {
+						log.Printf("Pet with ID %d not found", petID)
+						return
+					}
+
+					favoritesMutex.Lock()
+					userFavorites[event.Source.UserID] = append(userFavorites[event.Source.UserID], pet)
+					favoritesMutex.Unlock()
+
+					log.Printf("User %s favorited pet %d", event.Source.UserID, petID)
+					if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("已將寵物加入您的收藏！")).Do(); err != nil {
+						log.Print(err)
+					}
+					return
+				}
+
 				if strings.Contains(inText, "狗") || strings.Contains(inText, "dog") {
 					pet = PetDB.GetNextDog()
 				} else if strings.Contains(inText, "貓") || strings.Contains(inText, "cat") {

@@ -14,7 +14,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 )
 
 //PetType :
