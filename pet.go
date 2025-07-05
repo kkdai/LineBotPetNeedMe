@@ -54,10 +54,12 @@ type Pet struct {
 func (p *Pet) PetType() PetType {
 	var retType PetType
 	switch p.Variety {
-	case "犬":
+	case "狗":
 		retType = Dog
 	case "貓":
 		retType = Cat
+	default:
+		retType = -1 // Or some other indicator for unknown
 	}
 
 	return retType
