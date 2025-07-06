@@ -157,3 +157,26 @@ func TestSearchPets(t *testing.T) {
 		}
 	}
 }
+
+func TestSearchCats(t *testing.T) {
+	pets := NewPets()
+	if pets == nil {
+		t.Error("Cannot get pet..")
+	}
+
+	criteria := &SearchCriteria{
+		Kind: "貓",
+	}
+
+	results := pets.SearchPets(criteria)
+
+	if len(results) == 0 {
+		t.Error("No cats found")
+	}
+
+	for _, pet := range results {
+		if pet.Variety != "貓" {
+			t.Errorf("Expected cat, but got %s", pet.Variety)
+		}
+	}
+}

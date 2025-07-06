@@ -24,6 +24,8 @@ const (
 	Dog PetType = iota
 	//Cat :
 	Cat
+	//Other :
+	Other
 )
 
 //Pet :
@@ -59,7 +61,7 @@ func (p *Pet) PetType() PetType {
 	case "貓":
 		retType = Cat
 	default:
-		retType = -1 // Or some other indicator for unknown
+		retType = Other
 	}
 
 	return retType
