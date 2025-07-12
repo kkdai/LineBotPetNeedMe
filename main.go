@@ -127,10 +127,9 @@ func createFavoriteButton(pet *Pet) *linebot.ButtonComponent {
 }
 
 func createShareButton(pet *Pet) *linebot.ButtonComponent {
-	shareURI := fmt.Sprintf("line://msg/text/?%s", url.QueryEscape(pet.DisplayPet()))
 	return &linebot.ButtonComponent{
 		Style:  linebot.FlexButtonStyleTypeLink,
-		Action: linebot.NewURIAction("分享給好友", shareURI),
+		Action: linebot.NewPostbackAction("分享給好友", "action=share&petID="+strconv.Itoa(pet.ID), "", "分享給好友", "", ""),
 	}
 }
 
@@ -238,7 +237,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				continue
 			}
 			action := params.Get("action")
-			if action == "favorite" {
+			switch action {
+			case "favorite":
 				petIDStr := params.Get("petID")
 				petID, err := strconv.Atoi(petIDStr)
 				if err != nil {
@@ -256,6 +256,28 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("已將寵物加入您的收藏！")).Do(); err != nil {
 						log.Print(err)
 					}
+				}
+			case "share":
+				petIDStr := params.Get("petID")
+				petID, err := strconv.Atoi(petIDStr)
+				if err != nil {
+					log.Printf("Invalid pet ID: %s", petIDStr)
+					continue
+				}
+				pet := PetDB.GetPet(petID)
+				if pet == nil {
+					log.Printf("Pet with ID %d not found", petID)
+					continue
+				}
+				if len(pet.ImageName) > 0 {
+					pet.ImageName = getSecureImageAddress(pet.ImageName)
+				}
+
+				shareMessage := linebot.NewTextMessage("請長按並轉傳下方的寵物資訊給您的好友")
+				flexMessage := newPetFlexMessage(pet)
+
+				if _, err := bot.ReplyMessage(event.ReplyToken, shareMessage, flexMessage).Do(); err != nil {
+					log.Print(err)
 				}
 			}
 
