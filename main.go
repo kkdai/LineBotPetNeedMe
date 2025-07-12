@@ -13,6 +13,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"log"
@@ -21,21 +22,42 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"sync"
 
+	firebase "firebase.google.com/go/v4"
+	"firebase.google.com/go/v4/db"
 	"github.com/line/line-bot-sdk-go/v7/linebot"
 )
 
 var ImgSrv string
 var bot *linebot.Client
+var dbClient *db.Client
 
 // PetDB :
 var PetDB *Pets
-var userFavorites = make(map[string][]*Pet)
-var favoritesMutex = &sync.Mutex{}
 
 func main() {
 	var err error
+	ctx := context.Background()
+
+	// Initialize Firebase
+	firebaseDBURL := os.Getenv("FIREBASE_DB")
+	if firebaseDBURL == "" {
+		log.Fatal("FIREBASE_DB environment variable must be set")
+	}
+	conf := &firebase.Config{
+		DatabaseURL: firebaseDBURL,
+	}
+	// ADC will be used for authentication.
+	app, err := firebase.NewApp(ctx, conf)
+	if err != nil {
+		log.Fatalf("error initializing app: %v\n", err)
+	}
+
+	dbClient, err = app.Database(ctx)
+	if err != nil {
+		log.Fatalf("error getting Database client: %v\n", err)
+	}
+
 	ImgSrv = os.Getenv("IMG_SRV")
 
 	PetDB = NewPets()
@@ -84,8 +106,8 @@ func newPetFlexMessage(pet *Pet) *linebot.FlexMessage {
 			},
 		},
 		Footer: &linebot.BoxComponent{
-			Type:   linebot.FlexComponentTypeBox,
-			Layout: linebot.FlexBoxLayoutTypeVertical,
+			Type:    linebot.FlexComponentTypeBox,
+			Layout:  linebot.FlexBoxLayoutTypeVertical,
 			Spacing: linebot.FlexComponentSpacingTypeSm,
 			Contents: []linebot.FlexComponent{
 				createFavoriteButton(pet),
@@ -112,12 +134,10 @@ func createShareButton(pet *Pet) *linebot.ButtonComponent {
 	}
 }
 
-
-
 func createDetailRow(title, value string) *linebot.BoxComponent {
 	return &linebot.BoxComponent{
-		Type:   linebot.FlexComponentTypeBox,
-		Layout: linebot.FlexBoxLayoutTypeBaseline,
+		Type:    linebot.FlexComponentTypeBox,
+		Layout:  linebot.FlexBoxLayoutTypeBaseline,
 		Spacing: linebot.FlexComponentSpacingTypeSm,
 		Contents: []linebot.FlexComponent{
 			&linebot.TextComponent{
@@ -165,6 +185,38 @@ func getSecureImageAddress(oriAdd string) string {
 
 }
 
+func addFavorite(ctx context.Context, userID string, pet *Pet) error {
+	ref := dbClient.NewRef("/petneedme/favorites/" + userID)
+	// Use pet ID as the key to avoid duplicates
+	petRef := ref.Child(strconv.Itoa(pet.ID))
+	if err := petRef.Set(ctx, pet); err != nil {
+		log.Printf("Error adding favorite to Firebase for user %s: %v", userID, err)
+		return err
+	}
+	log.Printf("User %s favorited pet %d", userID, pet.ID)
+	return nil
+}
+
+func getFavorites(ctx context.Context, userID string) ([]*Pet, error) {
+	var favorites map[string]Pet
+	ref := dbClient.NewRef("/petneedme/favorites/" + userID)
+	if err := ref.Get(ctx, &favorites); err != nil {
+		log.Printf("Error getting favorites from Firebase for user %s: %v", userID, err)
+		return nil, err
+	}
+
+	if favorites == nil {
+		return []*Pet{}, nil
+	}
+
+	favsSlice := make([]*Pet, 0, len(favorites))
+	for _, pet := range favorites {
+		p := pet // Create a new variable to avoid pointer issues in loops
+		favsSlice = append(favsSlice, &p)
+	}
+	return favsSlice, nil
+}
+
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	events, err := bot.ParseRequest(r)
 	if err != nil {
@@ -176,6 +228,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	for _, event := range events {
+		ctx := r.Context()
 		switch event.Type {
 		case linebot.EventTypePostback:
 			data := event.Postback.Data
@@ -199,13 +252,10 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					continue
 				}
 
-				favoritesMutex.Lock()
-				userFavorites[event.Source.UserID] = append(userFavorites[event.Source.UserID], pet)
-				favoritesMutex.Unlock()
-
-				log.Printf("User %s favorited pet %d", event.Source.UserID, petID)
-				if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("已將寵物加入您的收藏！")).Do(); err != nil {
-					log.Print(err)
+				if err := addFavorite(ctx, event.Source.UserID, pet); err == nil {
+					if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("已將寵物加入您的收藏！")).Do(); err != nil {
+						log.Print(err)
+					}
 				}
 			}
 
@@ -281,13 +331,10 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 						return
 					}
 
-					favoritesMutex.Lock()
-					userFavorites[event.Source.UserID] = append(userFavorites[event.Source.UserID], pet)
-					favoritesMutex.Unlock()
-
-					log.Printf("User %s favorited pet %d", event.Source.UserID, petID)
-					if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("已將寵物加入您的收藏！")).Do(); err != nil {
-						log.Print(err)
+					if err := addFavorite(ctx, event.Source.UserID, pet); err == nil {
+						if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("已將寵物加入您的收藏！")).Do(); err != nil {
+							log.Print(err)
+						}
 					}
 					return
 				}
@@ -297,9 +344,13 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				} else if strings.Contains(inText, "貓") || strings.Contains(inText, "cat") {
 					pet = PetDB.GetNextCat()
 				} else if strings.Contains(inText, "收藏") {
-					favoritesMutex.Lock()
-					favs := userFavorites[event.Source.UserID]
-					favoritesMutex.Unlock()
+					favs, err := getFavorites(ctx, event.Source.UserID)
+					if err != nil {
+						if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("抱歉，讀取收藏清單時發生錯誤。")).Do(); err != nil {
+							log.Print(err)
+						}
+						return
+					}
 
 					if len(favs) == 0 {
 						if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("您尚未收藏任何寵物。")).Do(); err != nil {
