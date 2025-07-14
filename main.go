@@ -126,10 +126,27 @@ func createFavoriteButton(pet *Pet) *linebot.ButtonComponent {
 	}
 }
 
+func generateShareText(pet *Pet) string {
+	return fmt.Sprintf(
+		"我想跟你分享一個可愛的寵物！\n\n"+
+			"名字：%s\n"+
+			"種類：%s\n"+
+			"性別：%s\n"+
+			"體型：%s\n"+
+			"年紀：%s\n"+
+			"收容所：%s\n"+
+			"聯絡電話：%s\n\n"+
+			"看看牠的照片吧：%s",
+		pet.Name, pet.Variety, pet.Sex, pet.Type, pet.Age, pet.Resettlement, pet.Phone, pet.ImageName,
+	)
+}
+
 func createShareButton(pet *Pet) *linebot.ButtonComponent {
+	shareText := generateShareText(pet)
+	shareURI := fmt.Sprintf("line://msg/text/?%s", url.QueryEscape(shareText))
 	return &linebot.ButtonComponent{
 		Style:  linebot.FlexButtonStyleTypeLink,
-		Action: linebot.NewPostbackAction("分享給好友", "action=share&petID="+strconv.Itoa(pet.ID), "", "分享給好友", "", ""),
+		Action: linebot.NewURIAction("分享給好友", shareURI),
 	}
 }
 
@@ -236,7 +253,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				log.Printf("Failed to parse postback data: %s", err)
 				continue
 			}
-			action := params.Get("action")
+						action := params.Get("action")
 			switch action {
 			case "favorite":
 				petIDStr := params.Get("petID")
@@ -256,28 +273,6 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("已將寵物加入您的收藏！")).Do(); err != nil {
 						log.Print(err)
 					}
-				}
-			case "share":
-				petIDStr := params.Get("petID")
-				petID, err := strconv.Atoi(petIDStr)
-				if err != nil {
-					log.Printf("Invalid pet ID: %s", petIDStr)
-					continue
-				}
-				pet := PetDB.GetPet(petID)
-				if pet == nil {
-					log.Printf("Pet with ID %d not found", petID)
-					continue
-				}
-				if len(pet.ImageName) > 0 {
-					pet.ImageName = getSecureImageAddress(pet.ImageName)
-				}
-
-				shareMessage := linebot.NewTextMessage("請長按並轉傳下方的寵物資訊給您的好友")
-				flexMessage := newPetFlexMessage(pet)
-
-				if _, err := bot.ReplyMessage(event.ReplyToken, shareMessage, flexMessage).Do(); err != nil {
-					log.Print(err)
 				}
 			}
 
